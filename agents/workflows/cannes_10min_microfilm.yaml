@@ -1,0 +1,118 @@
+name: cannes_10min_microfilm_agent_team
+version: 0.1.0
+goal: >
+  Validate whether an agent team can outperform a single agent when creating
+  a 10-minute AI microfilm package and Jimeng-ready generation plan.
+
+roles:
+  - showrunner
+  - screenwriter
+  - script_doctor
+  - visual_concept_designer
+  - cinematographer
+  - director
+  - coarse_storyboard_artist
+  - fine_storyboard_artist
+  - producer
+  - editor
+  - ai_actor_coach
+  - critic
+  - audience_panel
+
+stages:
+  - id: 00_brief
+    owner: showrunner
+    outputs:
+      - project_bible.md
+      - constraints.md
+
+  - id: 01_concept_debate
+    owner: screenwriter
+    debate:
+      proposer: screenwriter
+      opposition: script_doctor
+      judge: showrunner
+    outputs:
+      - concept_options.md
+      - concept_debate.md
+      - decision_log.md
+
+  - id: 02_script
+    owner: screenwriter
+    review:
+      - script_doctor
+      - audience_panel
+    outputs:
+      - logline.md
+      - character_arc.md
+      - four_act_outline.md
+      - scene_list.md
+      - screenplay_v1.md
+      - script_doctor_report.md
+      - screenplay_v2.md
+
+  - id: 03_visual_development
+    owner: visual_concept_designer
+    review:
+      - cinematographer
+      - director
+    outputs:
+      - visual_bible.md
+      - moodboard_spec.md
+      - color_script.md
+      - character_design_spec.md
+      - location_design_spec.md
+
+  - id: 04_director_synthesis
+    owner: director
+    outputs:
+      - director_statement.md
+      - scene_intent_table.md
+      - blocking_notes.md
+
+  - id: 05_storyboard
+    owner: coarse_storyboard_artist
+    handoff_to: fine_storyboard_artist
+    review:
+      - cinematographer
+      - editor
+      - ai_actor_coach
+    outputs:
+      - coarse_storyboard.md
+      - fine_storyboard.csv
+      - performance_beats.md
+      - shot_continuity_check.md
+
+  - id: 06_production
+    owner: producer
+    outputs:
+      - production_plan.md
+      - cost_risk_table.md
+      - asset_reuse_plan.md
+
+  - id: 07_jimeng_prompts
+    owner: fine_storyboard_artist
+    review:
+      - critic
+    outputs:
+      - team_jimeng_prompts.md
+      - generation_log.md
+
+  - id: 08_review
+    owner: critic
+    review:
+      - audience_panel
+      - showrunner
+    outputs:
+      - critic_review.md
+      - audience_reaction.md
+      - revision_tasks.md
+
+success_metrics:
+  quality_lift_threshold: 0.15
+  minimum_stronger_dimensions:
+    - script_structure
+    - visual_style
+    - cinematography
+    - jimeng_prompt_quality
+    - review_actionability

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaitongg-bit/cliagentteamjimeng/schemas/artifacts.schema.json",
+  "title": "AI Microfilm Agent Team Artifacts",
+  "type": "object",
+  "required": ["run_id", "brief", "single_agent", "agent_team", "evaluation"],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "brief": {
+      "type": "object",
+      "required": ["title", "duration_minutes", "target_quality", "theme"],
+      "properties": {
+        "title": {"type": "string"},
+        "duration_minutes": {"type": "number"},
+        "target_quality": {"type": "string"},
+        "theme": {"type": "string"},
+        "constraints": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "single_agent": {
+      "type": "object",
+      "properties": {
+        "concept": {"type": "string"},
+        "screenplay": {"type": "string"},
+        "storyboard": {"type": "string"},
+        "jimeng_prompts": {"type": "string"},
+        "self_review": {"type": "string"}
+      }
+    },
+    "agent_team": {
+      "type": "object",
+      "properties": {
+        "project_bible": {"type": "string"},
+        "decision_log": {"type": "string"},
+        "screenplay_versions": {"type": "array", "items": {"type": "string"}},
+        "visual_bible": {"type": "string"},
+        "storyboards": {"type": "array", "items": {"type": "string"}},
+        "jimeng_prompts": {"type": "string"},
+        "critic_reviews": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "rubric_scores": {"type": "array", "items": {"$ref": "#/$defs/score"}},
+        "costs": {"type": "object"},
+        "winner": {"type": "string", "enum": ["single_agent", "agent_team", "inconclusive"]}
+      }
+    }
+  },
+  "$defs": {
+    "score": {
+      "type": "object",
+      "required": ["dimension", "single_agent", "agent_team"],
+      "properties": {
+        "dimension": {"type": "string"},
+        "single_agent": {"type": "number", "minimum": 1, "maximum": 5},
+        "agent_team": {"type": "number", "minimum": 1, "maximum": 5},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}
