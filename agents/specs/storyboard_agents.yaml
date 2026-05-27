@@ -1,0 +1,42 @@
+coarse_storyboard_artist:
+  id: coarse_storyboard_artist
+  name: 粗分镜师 Agent
+  mission: >
+    把场景拆成镜头段落，确定每个镜头的戏剧功能、景别、动作、情绪和节奏。
+  visible_inputs:
+    - screenplay_scene_list
+    - director_statement
+    - visual_bible
+    - cinematography_rules
+  runtime_rules:
+    - 不需要 Human 逐镜头介入。
+    - 每个镜头必须有 story_function。
+    - 必须避免连续多个镜头承担同一种功能。
+    - 必须为细分镜保留可执行信息，而不是文学描述。
+  outputs:
+    - coarse_storyboard.md
+
+fine_storyboard_artist:
+  id: fine_storyboard_artist
+  name: 细分镜师 Agent
+  mission: >
+    把粗分镜细化成可生成、可剪辑、可连续的 shot spec。
+  visible_inputs:
+    - coarse_storyboard
+    - cinematography_rules
+    - performance_beats
+    - edit_rhythm_map
+  runtime_rules:
+    - 必须检查角色尺寸连续。
+    - 必须检查人物视线和轴线。
+    - 必须检查光线方向和空间关系。
+    - 必须输出 Prompt Structurer 可直接使用的字段。
+  outputs:
+    - fine_storyboard.csv
+    - shot_continuity_check.md
+
+self_check_shared:
+  - 镜头是否服务戏剧动作？
+  - 是否能直接转成即梦 prompt？
+  - 是否有连续性风险？
+  - 是否需要补空镜或反应镜头？

@@ -9,6 +9,11 @@ principles:
   - decision_traceability
 
 agent_spec:
+  spec_directory: agents/specs
+  canonical_external_skills:
+    screenwriter:
+      path: /Users/bytedance/Downloads/screenwriting-master.skill
+      reason: 编剧 Agent 和剧本医生 Agent 的完整方法论来源。
   required_fields:
     - id
     - role
@@ -36,6 +41,7 @@ stages:
     agents:
       - id: screenwriter
         role: develop 3 story continuations
+        spec: agents/specs/screenwriter.yaml
         input_selector:
           - brief
           - user_story_seed
@@ -48,6 +54,7 @@ stages:
 
       - id: opposition_writer
         role: attack cliches and logic risks
+        spec: agents/specs/opposition_writer.yaml
         input_selector:
           - brief
           - user_story_seed
@@ -60,6 +67,7 @@ stages:
 
       - id: audience_panel
         role: predict audience comprehension and desire
+        spec: agents/specs/audience_panel.yaml
         input_selector:
           - brief
           - user_story_seed
@@ -82,18 +90,25 @@ stages:
     execution: parallel_review_then_revision
     agents:
       - id: screenwriter
+        spec: agents/specs/screenwriter.yaml
       - id: script_doctor
+        spec: agents/specs/script_doctor.yaml
       - id: audience_panel
+        spec: agents/specs/audience_panel.yaml
     synthesis:
       agent: showrunner
+      spec: agents/specs/showrunner.yaml
       human_gate: true
 
   - id: visual_development
     execution: human_assisted
     agents:
       - id: visual_concept_designer
+        spec: agents/specs/visual_concept_designer.yaml
       - id: style_curator
+        spec: agents/specs/visual_concept_designer.yaml
       - id: cinematographer
+        spec: agents/specs/cinematographer.yaml
     human_inputs:
       - style_skill_output
       - reference_films
@@ -103,6 +118,9 @@ stages:
     execution: sequential_review
     agents:
       - id: prompt_structurer
+        spec: agents/specs/prompt_structurer.yaml
       - id: prompt_compliance_reviewer
+        spec: agents/specs/prompt_compliance_reviewer.yaml
       - id: critic
+        spec: agents/specs/critic.yaml
     human_gate: true

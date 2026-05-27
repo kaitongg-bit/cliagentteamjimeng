@@ -25,6 +25,8 @@ docs/
   jimeng_cli_integration.md      # 即梦 CLI 接入方式
 agents/
   role_cards/core_team.md        # 核心角色卡
+  specs/                         # 真 Agent runtime 的精细设定
+  orchestration/                 # Orchestrator/runtime 配置草案
   workflows/cannes_10min_microfilm.yaml
 ui/
   index.html                     # 轻量可视化流程界面

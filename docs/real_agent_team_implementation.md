@@ -121,6 +121,20 @@ Orchestrator:
   write decision log
 ```
 
+当前仓库的精细设定放在：
+
+```text
+agents/specs/
+```
+
+其中编剧与剧本医生不重写方法论，而是引用用户提供的：
+
+```text
+/Users/bytedance/Downloads/screenwriting-master.skill
+```
+
+这个 skill 是编剧 Agent 的 canonical source；仓库里的 `screenwriter.yaml` 只定义 runtime 如何调用它、如何限制输入输出、如何与其他 Agent 交接。
+
 ## 推荐数据流
 
 ### Round 1：创意发散
