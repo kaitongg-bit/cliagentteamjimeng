@@ -1,0 +1,108 @@
+runtime: real_agent_team
+version: 0.1.0
+
+principles:
+  - independent_context
+  - independent_artifacts
+  - explicit_orchestration
+  - human_in_the_loop
+  - decision_traceability
+
+agent_spec:
+  required_fields:
+    - id
+    - role
+    - goal
+    - input_selector
+    - output_schema
+    - token_budget
+    - dependencies
+
+artifact_store:
+  path_template: runs/{run_id}/{stage_id}/{agent_id}.{ext}
+  metadata:
+    - run_id
+    - stage_id
+    - agent_id
+    - model
+    - token_budget
+    - input_artifacts
+    - output_artifact
+    - created_at
+
+stages:
+  - id: concept_debate
+    execution: parallel_then_synthesis
+    agents:
+      - id: screenwriter
+        role: develop 3 story continuations
+        input_selector:
+          - brief
+          - user_story_seed
+        output_schema:
+          - options
+          - strongest_option
+          - unresolved_questions
+        token_budget: medium
+        dependencies: []
+
+      - id: opposition_writer
+        role: attack cliches and logic risks
+        input_selector:
+          - brief
+          - user_story_seed
+        output_schema:
+          - risks
+          - strongest_objection
+          - must_fix
+        token_budget: medium
+        dependencies: []
+
+      - id: audience_panel
+        role: predict audience comprehension and desire
+        input_selector:
+          - brief
+          - user_story_seed
+        output_schema:
+          - what_i_understand
+          - confusion_points
+          - watch_desire
+          - memorability
+        token_budget: low
+        dependencies: []
+
+    synthesis:
+      agent: showrunner
+      human_gate: true
+      outputs:
+        - concept_decision_log.md
+        - next_round_brief.md
+
+  - id: script_revision
+    execution: parallel_review_then_revision
+    agents:
+      - id: screenwriter
+      - id: script_doctor
+      - id: audience_panel
+    synthesis:
+      agent: showrunner
+      human_gate: true
+
+  - id: visual_development
+    execution: human_assisted
+    agents:
+      - id: visual_concept_designer
+      - id: style_curator
+      - id: cinematographer
+    human_inputs:
+      - style_skill_output
+      - reference_films
+      - screenshot_notes
+
+  - id: prompt_generation
+    execution: sequential_review
+    agents:
+      - id: prompt_structurer
+      - id: prompt_compliance_reviewer
+      - id: critic
+    human_gate: true
