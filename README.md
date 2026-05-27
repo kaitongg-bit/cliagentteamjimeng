@@ -20,10 +20,14 @@
 docs/
   agent_team_architecture.md     # Agent Team 总架构
   experiment_protocol.md         # Single Agent vs Agent Team 对照实验
+  human_in_the_loop.md           # 人类参与点与 token 控制策略
+  agent_chat_interface.md        # @agent 对话式协作方式
   jimeng_cli_integration.md      # 即梦 CLI 接入方式
 agents/
   role_cards/core_team.md        # 核心角色卡
   workflows/cannes_10min_microfilm.yaml
+ui/
+  index.html                     # 轻量可视化流程界面
 schemas/
   artifacts.schema.json          # 过程产物结构
 scripts/
@@ -66,7 +70,7 @@ runs/YYYYMMDD_HHMMSS_cannes-test-001/
 同一个创作 brief，跑两条链路：
 
 - **Single Agent**：一个全能创作 agent 直接输出完整项目包。
-- **Agent Team**：编剧、美术概念设计师、导演、粗/细分镜、制片人、剪辑、AI 演员演技指导、审片人、观众等角色分工协作，并引入 debate / critic / revision loop。
+- **Agent Team**：编剧、美术概念设计师、导演、粗/细分镜、制片人、剪辑、AI 演员演技指导、审片人、观众、Prompt Structurer、Prompt Compliance Reviewer 等角色分工协作，并引入 debate / critic / revision loop 与 human-in-the-loop。
 
 然后用同一套评分表评估：
 
@@ -81,6 +85,16 @@ runs/YYYYMMDD_HHMMSS_cannes-test-001/
 - 剪辑节奏
 - 观众记忆点
 - 生成成本和迭代次数
+
+## 轻量可视化
+
+可以直接打开：
+
+```text
+ui/index.html
+```
+
+它展示 Agent Team 流程、人类参与点、提示词过审链路和 `@agent` 对话模板。第一阶段可以就在当前对话框里按 `@编剧`、`@导演`、`@审片人` 这种方式推进，不必先做复杂产品界面。
 
 ## 当前定位
 

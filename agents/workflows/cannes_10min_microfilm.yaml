@@ -13,15 +13,22 @@ roles:
   - director
   - coarse_storyboard_artist
   - fine_storyboard_artist
+  - prompt_structurer
+  - prompt_compliance_reviewer
   - producer
   - editor
   - ai_actor_coach
   - critic
   - audience_panel
+  - human_creative_director
 
 stages:
   - id: 00_brief
     owner: showrunner
+    human_input:
+      - creative_intent
+      - hard_constraints
+      - taste_boundary
     outputs:
       - project_bible.md
       - constraints.md
@@ -31,10 +38,13 @@ stages:
     debate:
       proposer: screenwriter
       opposition: script_doctor
+      audience: audience_panel
+      human_participant: human_creative_director
       judge: showrunner
     outputs:
       - concept_options.md
       - concept_debate.md
+      - human_concept_notes.md
       - decision_log.md
 
   - id: 02_script
@@ -53,12 +63,22 @@ stages:
 
   - id: 03_visual_development
     owner: visual_concept_designer
+    human_input:
+      - pasted_style_skill_output
+      - reference_film_names
+      - screenshot_or_shot_descriptions
+    agent_assist:
+      - suggest_reference_films
+      - suggest_search_targets
+      - normalize_style_language
+      - protect_private_style_assets
     review:
       - cinematographer
       - director
     outputs:
       - visual_bible.md
       - moodboard_spec.md
+      - human_style_inputs.md
       - color_script.md
       - character_design_spec.md
       - location_design_spec.md
@@ -74,6 +94,8 @@ stages:
     owner: coarse_storyboard_artist
     handoff_to: fine_storyboard_artist
     review:
+      - director
+      - visual_concept_designer
       - cinematographer
       - editor
       - ai_actor_coach
@@ -91,21 +113,39 @@ stages:
       - asset_reuse_plan.md
 
   - id: 07_jimeng_prompts
-    owner: fine_storyboard_artist
+    owner: prompt_structurer
+    inputs:
+      - fine_storyboard.csv
+      - visual_bible.md
+      - cinematography_rules.md
+      - performance_beats.md
+      - shot_continuity_check.md
     review:
+      - director
+      - cinematographer
+      - fine_storyboard_artist
+      - visual_concept_designer
+      - ai_actor_coach
       - critic
+      - prompt_compliance_reviewer
     outputs:
       - team_jimeng_prompts.md
+      - prompt_change_log.md
+      - prompt_contradiction_check.md
+      - prompt_compliance_report.md
+      - safe_prompt_rewrite.md
       - generation_log.md
 
   - id: 08_review
     owner: critic
     review:
       - audience_panel
+      - human_creative_director
       - showrunner
     outputs:
       - critic_review.md
       - audience_reaction.md
+      - human_final_notes.md
       - revision_tasks.md
 
 success_metrics:

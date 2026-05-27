@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Microfilm Agent Team</title>
+  <style>
+    :root {
+      --ink: #1d2433;
+      --muted: #647086;
+      --line: #d8dee8;
+      --paper: #f7f8fb;
+      --panel: #ffffff;
+      --blue: #2457c5;
+      --green: #137a63;
+      --red: #b33a3a;
+      --gold: #9a6a13;
+      --violet: #6b4cb3;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 760px;
+      font-size: 14px;
+    }
+
+    .status {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--green);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: calc(100vh - 94px);
+    }
+
+    aside {
+      border-right: 1px solid var(--line);
+      background: #eef2f7;
+      padding: 18px;
+    }
+
+    .agent-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .agent-button {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .agent-button[aria-pressed="true"] {
+      border-color: var(--blue);
+      outline: 2px solid rgba(36, 87, 197, 0.18);
+    }
+
+    .content {
+      padding: 24px 28px 36px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      min-height: 128px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .step[data-human="true"] { border-left-color: var(--gold); }
+    .step[data-prompt="true"] { border-left-color: var(--violet); }
+    .step[data-review="true"] { border-left-color: var(--red); }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+    }
+
+    .human { color: var(--gold); border-color: rgba(154, 106, 19, 0.35); }
+    .prompt { color: var(--violet); border-color: rgba(107, 76, 179, 0.35); }
+    .review { color: var(--red); border-color: rgba(179, 58, 58, 0.35); }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #172033;
+      color: #eef4ff;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    @media (max-width: 980px) {
+      header { grid-template-columns: 1fr; }
+      main { grid-template-columns: 1fr; }
+      aside { border-right: 0; border-bottom: 1px solid var(--line); }
+      .pipeline { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+      .details-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      header { padding: 22px 18px 16px; }
+      .content { padding: 18px; }
+      .pipeline { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>AI Microfilm Agent Team</h1>
+      <p class="subtitle">10 分钟微电影 Agent Team 验证工作台：保留观众与辩论，引入 Human 共创，重点强化分镜到即梦 Prompt 的结构化与过审链路。</p>
+    </div>
+    <div class="status"><span class="dot"></span><span>Ready for @agent workflow</span></div>
+  </header>
+
+  <main>
+    <aside>
+      <h2>Agents</h2>
+      <div class="agent-list" id="agentList"></div>
+    </aside>
+
+    <div class="content">
+      <section class="section">
+        <h2>Pipeline</h2>
+        <div class="pipeline">
+          <article class="step">
+            <div class="label">01</div>
+            <h3>创意辩论</h3>
+            <p class="small">编剧、反方、观众和 Human 一起判断哪个故事值得拍。</p>
+            <div class="tags"><span class="tag human">Human</span><span class="tag">Debate</span></div>
+          </article>
+          <article class="step">
+            <div class="label">02</div>
+            <h3>剧本开发</h3>
+            <p class="small">编剧与剧本医生保持强审查，锁定 10 分钟结构。</p>
+            <div class="tags"><span class="tag">Script</span><span class="tag review">Doctor</span></div>
+          </article>
+          <article class="step" data-human="true">
+            <div class="label">03</div>
+            <h3>风格共创</h3>
+            <p class="small">Agent 启发 Human 找参考，Human 粘贴 style skill，Agent 清洗成 visual bible。</p>
+            <div class="tags"><span class="tag human">Human</span><span class="tag">Moodboard</span></div>
+          </article>
+          <article class="step">
+            <div class="label">04</div>
+            <h3>导演统筹</h3>
+            <p class="small">导演、摄影、剪辑、演技指导统一情绪、镜头和表演。</p>
+            <div class="tags"><span class="tag">Director</span><span class="tag">Camera</span></div>
+          </article>
+          <article class="step">
+            <div class="label">05</div>
+            <h3>粗细分镜</h3>
+            <p class="small">不需要 Human 逐镜头拆，多个 Agent 联合完成 shot spec。</p>
+            <div class="tags"><span class="tag">Storyboard</span><span class="tag">Continuity</span></div>
+          </article>
+          <article class="step" data-prompt="true">
+            <div class="label">06</div>
+            <h3>Prompt 结构化</h3>
+            <p class="small">去冗余、去矛盾，保留 subject、action、camera、lighting、performance、continuity。</p>
+            <div class="tags"><span class="tag prompt">Prompt</span><span class="tag">Jimeng</span></div>
+          </article>
+          <article class="step" data-prompt="true">
+            <div class="label">07</div>
+            <h3>Prompt 过审</h3>
+            <p class="small">平台安全、版权、私有风格资产、敏感表达和自相矛盾检查。</p>
+            <div class="tags"><span class="tag prompt">Compliance</span><span class="tag review">QA</span></div>
+          </article>
+          <article class="step" data-review="true">
+            <div class="label">08</div>
+            <h3>机审 + 人拍板</h3>
+            <p class="small">审片人先分类问题，Human 决定改不改，Showrunner 形成下一轮 brief。</p>
+            <div class="tags"><span class="tag review">Critic</span><span class="tag human">Human</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 id="agentTitle">Agent Detail</h2>
+        <div class="details-grid">
+          <div>
+            <h3>职责</h3>
+            <p class="small" id="agentRole"></p>
+          </div>
+          <div>
+            <h3>参与方式</h3>
+            <p class="small" id="agentMode"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>@Agent Template</h2>
+        <pre id="templateText"></pre>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const agents = [
+      {
+        name: "@编剧",
+        role: "生成故事核、人物弧光、四段式结构和场景列表。",
+        mode: "和剧本医生、反方编剧、观众一起进入创意与剧本 debate。",
+        template: "@编剧 @剧本医生\n输入：brief\n任务：输出 3 个 10 分钟微电影方案，并保持剧本医生强审查。\n输出：logline / 核心冲突 / 人物弧光 / 风险点 / 推荐排序"
+      },
+      {
+        name: "@观众",
+        role: "模拟电影节观众、普通短视频观众、AI 视频创作者观众。",
+        mode: "必须保留；Human 也参与，补充真实观看直觉。",
+        template: "@观众 @Human\n输入：剧本或分镜\n任务：判断看不看得懂、想不想继续看、最记得什么、哪里困惑。"
+      },
+      {
+        name: "@美术概念设计师",
+        role: "把故事转成空间、色彩、材质、道具和角色视觉规则。",
+        mode: "先启发 Human 去找参考；Human 粘贴 style skill 后再结构化。",
+        template: "@美术概念设计师 @风格策展人 @Human\n任务：先告诉我该找哪些电影、截图、色彩、布光和导演参考。等我粘贴 style 解析词后，整理成 visual bible。"
+      },
+      {
+        name: "@细分镜师",
+        role: "把粗分镜变成可生成、可剪辑、可连续的 shot spec。",
+        mode: "不需要 Human 逐镜头写；导演、摄影、剪辑、演技指导共同参与。",
+        template: "@粗分镜师 @细分镜师 @导演 @摄影指导 @剪辑 @AI演技指导\n任务：输出 coarse storyboard 和 fine storyboard，包含 shot_id、时长、景别、动作、镜头运动、表演、连续性。"
+      },
+      {
+        name: "@PromptStructurer",
+        role: "把 fine storyboard 转成即梦 prompt，去冗长、去矛盾、保留关键字段。",
+        mode: "导演、摄影、细分镜、美术、演技指导、审片人都参与校验。",
+        template: "@PromptStructurer @PromptCompliance @导演 @摄影指导 @细分镜师 @AI演技指导 @审片人\n任务：把 fine storyboard 转成即梦 prompts。要求结构化、不冗长、不自相矛盾、可过审、保留 continuity。"
+      },
+      {
+        name: "@审片人",
+        role: "机审一轮，把问题分类到剧本、视觉、镜头、表演、剪辑、prompt 或工具能力。",
+        mode: "Human 最终拍板，Showrunner 输出下一轮 revision brief。",
+        template: "@审片人 @观众 @Human @Showrunner\n任务：审片人先机器审一轮，观众给观看反应，Human 拍板，Showrunner 输出下一轮 revision brief。"
+      }
+    ];
+
+    const list = document.getElementById("agentList");
+    const title = document.getElementById("agentTitle");
+    const role = document.getElementById("agentRole");
+    const mode = document.getElementById("agentMode");
+    const template = document.getElementById("templateText");
+
+    function selectAgent(index) {
+      const agent = agents[index];
+      title.textContent = agent.name;
+      role.textContent = agent.role;
+      mode.textContent = agent.mode;
+      template.textContent = agent.template;
+      [...list.children].forEach((button, i) => {
+        button.setAttribute("aria-pressed", i === index ? "true" : "false");
+      });
+    }
+
+    agents.forEach((agent, index) => {
+      const button = document.createElement("button");
+      button.className = "agent-button";
+      button.type = "button";
+      button.textContent = agent.name;
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", () => selectAgent(index));
+      list.appendChild(button);
+    });
+
+    selectAgent(0);
+  </script>
+</body>
+</html>

@@ -9,6 +9,7 @@
 - **每个 Agent 必须产出可审查物**，不能只给建议。
 - **关键节点必须有反方审查**，尤其是创意、剧本、视觉风格、分镜、成片诊断。
 - **导演 / Showrunner 拥有最终取舍权**，避免多 Agent 把项目带散。
+- **Human 不是旁观者**，而是共同创作人：参与观众反馈、辩论拍板、风格参考维护和最终审片决策。
 - **所有判断都落到可执行媒介**：剧本、分镜、镜头、光影、表演、剪辑、即梦 prompt。
 - **过程产物本身纳入评估**，因为产品价值不只在最终视频，也在创作者是否更容易判断和迭代。
 
@@ -25,8 +26,14 @@ flowchart TD
   P --> D
   D --> SB["Storyboard Room"]
   SB --> PR["Prompt Structurer"]
-  PR --> J["Jimeng CLI / Video Generation"]
+  PR --> PC["Prompt Compliance + Contradiction Review"]
+  PC --> J["Jimeng CLI / Video Generation"]
   J --> QA["Critic Review Board"]
+  H["Human Creative Director"] --> O
+  H --> V
+  H --> QA
+  H --> AU["Audience Panel"]
+  AU --> QA
   QA --> R["Revision Loop"]
   R --> O
   QA --> E["Experiment Evaluation"]
@@ -78,7 +85,7 @@ flowchart TD
 建议子角色：
 
 - **美术概念设计师**：把主题翻译成世界观、空间、道具、材质、色彩。
-- **风格策展人**：建立 moodboard 和参考体系，不直接盗用私人风格资产。
+- **风格策展人**：启发人类去找参考片、剧照、导演、时代风格、ShotDeck/电影截图等参考，并和人类共同维护 moodboard。
 - **摄影指导**：决定景别、焦段、镜头、光圈、布光、景深。
 
 来自创作者访谈的关键洞察：
@@ -95,6 +102,13 @@ flowchart TD
 - `character_design_spec.md`
 - `location_design_spec.md`
 - `cinematography_rules.md`
+- `human_style_inputs.md`
+
+人类参与方式：
+
+- Agent 提供“可以去找什么”的方向，例如某类电影、某类色彩、某类布光、某类镜头运动。
+- Human 粘贴风格解析词、参考片名、截图描述或你已有的 style skill 产物。
+- Agent 负责把这些输入清洗成可复用、非侵权、可执行的视觉规则。
 
 ### 4. 导演 Agent
 
@@ -116,11 +130,13 @@ flowchart TD
 
 - 把场景拆成镜头段落。
 - 确定每个镜头的戏剧功能、景别、运动、情绪。
+- 接收编剧、导演、美术、摄影、剪辑、AI 演技指导的联合意见，不依赖人类逐镜头拆分。
 
 细分镜职责：
 
 - 输出可给即梦使用的 shot spec。
 - 检查角色尺寸、视线方向、轴线、连续性、前后镜头衔接。
+- 把粗分镜变成 Prompt Structurer 可直接加工的结构化字段。
 
 关键产物：
 
@@ -128,7 +144,44 @@ flowchart TD
 - `fine_storyboard.csv`
 - `shot_continuity_check.md`
 
-### 6. 制片人 Agent
+### 6. Prompt Structurer Agent
+
+职责：
+
+- 把细分镜、导演意图、美术规则、摄影规则、演技指导转成即梦可执行 prompt。
+- 删除冗长、重复、低权重、互相矛盾的描述。
+- 保留每个镜头最关键的 subject / action / camera / lighting / performance / continuity。
+- 输出 prompt version，方便 A/B 和二轮修改。
+
+必须参与的上游 Agent：
+
+- 导演：确认镜头服务情绪与叙事。
+- 摄影指导：确认景别、焦段、运动、布光不矛盾。
+- 细分镜师：确认 shot spec 与前后镜头连续。
+- AI 演员演技指导：确认情绪落到可见动作。
+- 美术概念设计师：确认风格规则、材质、色彩统一。
+
+关键产物：
+
+- `team_jimeng_prompts.md`
+- `prompt_change_log.md`
+- `prompt_contradiction_check.md`
+
+### 7. Prompt Compliance Reviewer Agent
+
+职责：
+
+- 做平台安全、版权、风格资产和“过审”检查。
+- 避免直接要求复刻特定在世创作者私有风格。
+- 避免未授权垫图、敏感表达、过度血腥暴力、未成年人风险等高风险生成指令。
+- 保证 prompt 不用规避规则的写法，而是把创作目标转成合规表达。
+
+关键产物：
+
+- `prompt_compliance_report.md`
+- `safe_prompt_rewrite.md`
+
+### 8. 制片人 Agent
 
 职责：
 
@@ -142,7 +195,7 @@ flowchart TD
 - `cost_risk_table.md`
 - `asset_reuse_plan.md`
 
-### 7. 剪辑 Agent
+### 9. 剪辑 Agent
 
 职责：
 
@@ -156,7 +209,7 @@ flowchart TD
 - `assembly_notes.md`
 - `trailer_or_hook_cut.md`
 
-### 8. AI 演员演技指导 Agent
+### 10. AI 演员演技指导 Agent
 
 职责：
 
@@ -169,20 +222,22 @@ flowchart TD
 - `performance_beats.md`
 - `actor_direction_table.md`
 
-### 9. 审片人 Critic Agent
+### 11. 审片人 Critic Agent
 
 职责：
 
-- 审剧本、审分镜、审即梦生成结果。
+- 机器审一轮：审剧本、审分镜、审即梦生成结果。
 - 明确指出问题属于剧本、视觉、镜头、表演、剪辑、提示词还是工具能力。
 - 给下一轮修改 brief，而不是泛泛说“更电影感”。
+- Human 做最终拍板：哪些问题真的要改，哪些是 AI 过度挑刺。
 
 关键产物：
 
 - `review_report_v*.md`
 - `revision_tasks.md`
+- `human_final_notes.md`
 
-### 10. 观众 Agent
+### 12. 观众 Agent + Human Audience
 
 建议至少模拟三类观众：
 
@@ -190,11 +245,14 @@ flowchart TD
 - **普通短视频观众**：看前 3 秒、理解成本、情绪牵引。
 - **AI 视频创作者观众**：看技术完成度、风格一致性、可复用方法。
 
+观众 Agent 必须保留，因为它能在过程里持续提供“能不能懂、想不想看”的信号。Human 也必须参与，因为真实观看反应比模拟更有价值。
+
 关键产物：
 
 - `audience_reaction.md`
 - `confusion_points.md`
 - `memorability_score.md`
+- `human_audience_notes.md`
 
 ## SOTA 协作模式
 
@@ -213,6 +271,7 @@ flowchart TD
 Proposal Agent: 给出方案
 Opposition Agent: 找俗套、找不可拍、找逻辑漏洞
 Audience Agent: 判断观众是否能懂、是否想看下去
+Human: 给直觉判断、补充真实偏好
 Showrunner: 做取舍并写 decision log
 ```
 
