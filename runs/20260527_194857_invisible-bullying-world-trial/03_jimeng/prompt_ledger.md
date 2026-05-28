@@ -68,3 +68,40 @@ Negative constraints:
 ```text
 cinematic lighting, beautiful composition, movie poster, cyberpunk, neon, sci-fi, hacker room, luxury apartment, clean design interior, staged poverty, dramatic horror, electric sparks, glossy photography, anime, illustration, CGI, game render, readable long text, real brand logo, real platform logo, real celebrity face
 ```
+
+## Round 12B DG_CONCEPT_001_REWRITE CLI Test
+
+Source: Prompt Structurer self-audit rewrite, executed by Showrunner through Dreamina CLI.
+
+Prompt used:
+
+```text
+A bad cheap-phone photo from the doorway of a tiny old Chinese rental room at rainy night. Handheld, slightly tilted, soft focus, dirty lens, greenish auto white balance, crushed dark areas, overexposed computer screen, visible JPEG compression noise. The room is cramped and damp: peeling gray-white wall, taped leaking aluminum window, plastic basin on the floor catching water, cheap desk with one old monitor, unpaid bill partly under a takeout soup lid, power strip lifted on swollen books. A tired man sits at the desk with his back half turned, only a dull silhouette in cold screen glow. The editing software on the monitor is unreadable, just gray blocks and timeline-like light. Ordinary, humid, ugly, unglamorous, documentary accident, like a real still found in a phone gallery. Avoid cinematic lighting, beautiful composition, movie poster, cyberpunk, neon, sci-fi, hacker room, luxury apartment, clean design interior, staged poverty, dramatic horror, electric sparks, glossy photography, anime, illustration, CGI, game render, readable long text, real brand logo, real platform logo, real celebrity face.
+```
+
+Parameters:
+
+```yaml
+tool: dreamina text2image
+model_version: 4.6
+resolution_type: 2k
+ratio: 16:9
+poll: 120
+```
+
+Result:
+
+```yaml
+submit_id: 782ba099-28ed-43d6-8466-7b6d299429c1
+gen_status: success
+width: 2560
+height: 1440
+credit_count: 1
+local_file: runs/20260527_194857_invisible-bullying-world-trial/03_jimeng/jimeng_outputs/round12_low_quality_real_concepts/DG_CONCEPT_001_REWRITE_cheap_phone_doorway.png
+```
+
+Showrunner read:
+
+- Improved: doorway view, back-turned subject, overexposed screen, damp room, basin and water damage all serve the "caught reality" direction.
+- Still weak: it remains too composed and too visually coherent; the rain streaks and lighting feel like a designed atmosphere.
+- Next revision should reduce widescreen beauty: use vertical phone frame or surveillance frame, off-center accidental crop, flash / no flash ambiguity, harsher mixed fluorescent color, partial obstruction by door frame, lower resolution, worse focus, and fewer pleasing rain effects.
