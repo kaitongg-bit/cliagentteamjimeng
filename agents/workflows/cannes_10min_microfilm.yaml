@@ -83,6 +83,32 @@ stages:
       - character_design_spec.md
       - location_design_spec.md
 
+  - id: 03b_medium_and_look_lock
+    owner: showrunner
+    trigger:
+      - after_screenplay_and_coarse_storyboard
+      - before_fine_storyboard_or_prompt_structuring
+      - when_human_asks_about_direct_feel_medium_or_style
+      - when_visual_bible_only_covers_props_locations_not_image_species
+    participants:
+      - visual_concept_designer
+      - director
+      - cinematographer
+      - prompt_structurer
+      - audience_panel
+      - human_creative_director
+    decision_questions:
+      - What image species is this: hyperreal live action, documentary, animation, stop motion, game cinematic, AIGC collage, phone footage, or hybrid?
+      - What should the viewer feel they are watching in the first three seconds?
+      - Which style choice would cause the largest downstream storyboard/prompt rewrite if decided too late?
+      - Which visual language best serves the project goal and target platform?
+    outputs:
+      - medium_and_look_options.md
+      - agent_debate_medium_and_look.md
+      - human_medium_notes.md
+      - medium_and_look_lock.md
+      - downstream_revision_brief.md
+
   - id: 04_director_synthesis
     owner: director
     outputs:

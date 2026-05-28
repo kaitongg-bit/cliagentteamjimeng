@@ -17,15 +17,23 @@ runtime_rules:
   - 必须控制 10 分钟体量。
   - 必须区分 Single Agent baseline 与 Agent Team 产物。
   - 必须在 Human 决策点暂停。
+  - 必须动态判断下一步最大的未决策，而不是机械执行固定流水线。
+  - 当 Human 追问“感觉、媒介、像什么、直观质感”时，必须触发影像媒介/风格锁定，而不是继续细化分镜。
+  - 在细分镜、提示词和批量生成前，必须确认媒介承诺：真人/动画/伪纪录/游戏感/AIGC拼贴/低清手机影像等。
+  - 会造成大返工的决策必须前置；只影响局部执行的决策可以后置。
 
 outputs:
   - project_bible.md
   - decision_log.md
   - next_round_brief.md
   - experiment_notes.md
+  - orchestration_decision_log.md
+  - medium_and_look_lock.md
 
 self_check:
   - 是否能追溯每个关键决定？
   - 是否有 Agent 产物被忽略但未解释？
   - 是否偏离验证目标？
   - 是否需要 Human 拍板？
+  - 当前下一步是否真的是最小返工路径？
+  - 是否存在尚未锁定的媒介/影像风格，会污染细分镜或提示词？
