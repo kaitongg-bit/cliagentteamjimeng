@@ -156,11 +156,22 @@ stages:
       - prompt_compliance_reviewer
     outputs:
       - team_jimeng_prompts.md
+      - prompt_ledger.md
       - prompt_change_log.md
       - prompt_contradiction_check.md
       - prompt_compliance_report.md
       - safe_prompt_rewrite.md
       - generation_log.md
+    disclosure_required:
+      every_generation_must_expose:
+        - source_agent
+        - prompt_text
+        - negative_constraints
+        - model_parameters
+        - generation_result
+        - showrunner_quality_read
+        - human_feedback
+        - next_prompt_revision
 
   - id: 08_review
     owner: critic

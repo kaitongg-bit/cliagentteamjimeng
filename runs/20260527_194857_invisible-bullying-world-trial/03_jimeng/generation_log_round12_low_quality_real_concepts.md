@@ -8,6 +8,12 @@ Agent collaboration used:
 - Prompt structurer agent converted each subject into concise Dreamina-safe text-to-image prompts, removing real celebrity / real brand references and keeping the visual instructions non-contradictory.
 - Showrunner chose Dreamina CLI model `4.6`, `2k`, `16:9`, then rejected the first overlong prompt style after one failed run and switched to shorter production prompts.
 
+Disclosure rule added after Human feedback:
+
+- Every future image/video pass must expose the exact prompts, negative constraints, parameters, submit IDs, local files, quality read, Human feedback, and next prompt revision plan in `prompt_ledger.md`.
+- Human feedback on this set: "真不真假不假".
+- Showrunner interpretation: these images are useful as a direction board, but they are still too composed and film-still-like. The next look-test should push harder toward badly captured reality: cheap phone defects, bad autofocus, accidental framing, compression noise, screen moire, low dynamic range, practical ugly light, and less beautiful widescreen composition.
+
 CLI setup:
 
 - Tool: `/Users/bytedance/.local/bin/dreamina`
