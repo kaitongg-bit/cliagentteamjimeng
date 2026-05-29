@@ -30,10 +30,12 @@ agents/
   workflows/cannes_10min_microfilm.yaml
 ui/
   index.html                     # 轻量可视化流程界面
+  moodboard.html                 # Moodboard MVP 工作台
 schemas/
   artifacts.schema.json          # 过程产物结构
 scripts/
   film_agent_team.py             # 本地实验脚手架
+  moodboard_server.py            # Moodboard MVP 本地服务
 examples/
   briefs/cannes_microfilm_brief.md
 runs/
@@ -97,6 +99,28 @@ ui/index.html
 ```
 
 它展示 Agent Team 流程、人类参与点、提示词过审链路和 `@agent` 对话模板。第一阶段可以就在当前对话框里按 `@编剧`、`@导演`、`@审片人` 这种方式推进，不必先做复杂产品界面。
+
+## Moodboard MVP
+
+审美权重高的任务，不应该让 AI 先用一张生成图替用户决定想象。Moodboard MVP 用来先让 Agent 给关键镜头生成“寻图任务卡”，Human 把参考图放进本机文件夹并标注“只要站位 / 只要影调 / 远离”等判断，再让 Agent 抽取视觉规则。
+
+启动：
+
+```bash
+python3 scripts/moodboard_server.py --port 8765
+```
+
+打开：
+
+```text
+http://127.0.0.1:8765/moodboard
+```
+
+使用说明见：
+
+```text
+docs/moodboard_mvp_runbook.md
+```
 
 ## 当前定位
 

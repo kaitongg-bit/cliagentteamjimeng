@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>定稿 Moodboard MVP</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --panel: #ffffff;
+      --ink: #202532;
+      --muted: #697386;
+      --line: #d9dee8;
+      --soft: #eef1f5;
+      --blue: #2457c5;
+      --green: #137a63;
+      --red: #b33a3a;
+      --gold: #9a6a13;
+      --shadow: 0 8px 24px rgba(20, 30, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    button, .file-button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.primary {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    button.ghost {
+      background: transparent;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 320px minmax(360px, 1fr) 360px;
+      min-height: calc(100vh - 78px);
+    }
+
+    .column {
+      min-width: 0;
+      padding: 14px;
+      overflow: auto;
+      max-height: calc(100vh - 78px);
+    }
+
+    .cards-column, .inspector-column {
+      background: #eef1f5;
+    }
+
+    .cards-column {
+      border-right: 1px solid var(--line);
+    }
+
+    .inspector-column {
+      border-left: 1px solid var(--line);
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .shot-card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .shot-card[aria-selected="true"] {
+      border-color: var(--blue);
+      outline: 2px solid rgba(36, 87, 197, 0.18);
+      box-shadow: var(--shadow);
+    }
+
+    .shot-card h2 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .card-body {
+      margin-top: 8px;
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chip.avoid {
+      color: var(--red);
+      border-color: rgba(179, 58, 58, 0.3);
+    }
+
+    .chip.active {
+      color: #fff;
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .drop-zone {
+      border: 1px dashed #b8c0ce;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .path {
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px;
+    }
+
+    .grid-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .image-tile {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .image-tile[aria-selected="true"] {
+      border-color: var(--blue);
+      outline: 2px solid rgba(36, 87, 197, 0.18);
+      box-shadow: var(--shadow);
+    }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+      background: var(--soft);
+    }
+
+    .tile-body {
+      padding: 9px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .tile-title {
+      margin: 0;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .preview {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      background: #111827;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 9px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .tag-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .analysis {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+    }
+
+    .analysis h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: #172033;
+      color: #fff;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 1120px) {
+      main {
+        grid-template-columns: 300px minmax(0, 1fr);
+      }
+
+      .inspector-column {
+        grid-column: 1 / -1;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .column {
+        max-height: none;
+      }
+
+      .cards-column {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>《定稿》Moodboard MVP</h1>
+      <p class="subtitle">先让 Human 建立视觉预期，再让 Agent 把参考图拆成站位、空间、景别、影调和提示词规则。</p>
+    </div>
+    <div class="toolbar">
+      <button class="ghost" id="refreshButton" type="button">刷新文件夹</button>
+      <label class="file-button" for="uploadInput">上传参考图</label>
+      <input id="uploadInput" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+      <button class="primary" id="saveButton" type="button">保存标注</button>
+      <button id="synthesisButton" type="button">生成总结</button>
+    </div>
+  </header>
+
+  <main>
+    <aside class="column cards-column">
+      <p class="panel-title">寻图任务卡</p>
+      <div id="cardList" class="card-list"></div>
+    </aside>
+
+    <section class="column">
+      <div class="drop-zone">
+        <strong>本机参考图文件夹</strong>
+        <p class="small">把截图、电影帧、手机照片放进这个文件夹，再点“刷新文件夹”。也可以直接点“上传参考图”。</p>
+        <div class="path" id="inboxPath">读取中...</div>
+      </div>
+      <div class="grid-head">
+        <div>
+          <p class="panel-title">图片网格</p>
+          <p class="small" id="gridStatus">等待加载</p>
+        </div>
+        <button class="ghost" id="showAllButton" type="button">显示全部</button>
+      </div>
+      <div id="imageGrid" class="image-grid"></div>
+    </section>
+
+    <aside class="column inspector-column">
+      <p class="panel-title">选中图片检查器</p>
+      <div id="inspector"></div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const state = {
+      cards: [],
+      items: [],
+      tagOptions: [],
+      selectedCardId: "",
+      selectedImageId: "",
+      showAll: true,
+      dirty: false
+    };
+
+    const cardList = document.getElementById("cardList");
+    const imageGrid = document.getElementById("imageGrid");
+    const inspector = document.getElementById("inspector");
+    const inboxPath = document.getElementById("inboxPath");
+    const gridStatus = document.getElementById("gridStatus");
+    const toast = document.getElementById("toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...options
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text);
+      }
+      return response.json();
+    }
+
+    async function loadState() {
+      const data = await api("/api/state");
+      state.cards = data.cards;
+      state.items = data.items;
+      state.tagOptions = data.tag_options;
+      inboxPath.textContent = data.inbox_dir;
+      if (!state.selectedCardId && state.cards.length) {
+        state.selectedCardId = state.cards[0].card_id;
+      }
+      render();
+    }
+
+    function cardById(id) {
+      return state.cards.find(card => card.card_id === id);
+    }
+
+    function itemById(id) {
+      return state.items.find(item => item.image_id === id);
+    }
+
+    function imageUrl(item) {
+      return `/files/${encodeURIComponent(item.file_path).replaceAll("%2F", "/")}`;
+    }
+
+    function render() {
+      renderCards();
+      renderGrid();
+      renderInspector();
+    }
+
+    function renderCards() {
+      cardList.innerHTML = "";
+      state.cards.forEach(card => {
+        const linkedCount = state.items.filter(item => item.linked_card_id === card.card_id).length;
+        const article = document.createElement("article");
+        article.className = "shot-card";
+        article.tabIndex = 0;
+        article.setAttribute("aria-selected", card.card_id === state.selectedCardId ? "true" : "false");
+        article.innerHTML = `
+          <div class="meta">${card.card_id} · ${card.scene_id} · ${linkedCount} 张图</div>
+          <h2>${card.shot_name}</h2>
+          <div class="card-body">
+            <div><strong>戏剧功能：</strong>${card.dramatic_function}</div>
+            <div><strong>感受：</strong>${card.viewer_should_feel}</div>
+            <div class="chips">${card.look_for.slice(0, 5).map(item => `<span class="chip">${item}</span>`).join("")}</div>
+            <div class="chips">${card.avoid.slice(0, 4).map(item => `<span class="chip avoid">${item}</span>`).join("")}</div>
+          </div>
+        `;
+        article.addEventListener("click", () => {
+          state.selectedCardId = card.card_id;
+          state.showAll = false;
+          render();
+        });
+        article.addEventListener("keydown", event => {
+          if (event.key === "Enter") article.click();
+        });
+        cardList.appendChild(article);
+      });
+    }
+
+    function renderGrid() {
+      const visibleItems = state.showAll
+        ? state.items
+        : state.items.filter(item => item.linked_card_id === state.selectedCardId || !item.linked_card_id);
+      imageGrid.innerHTML = "";
+      gridStatus.textContent = state.showAll
+        ? `${state.items.length} 张图，当前显示全部`
+        : `${visibleItems.length} 张图，当前任务卡：${state.selectedCardId}`;
+      if (!visibleItems.length) {
+        imageGrid.innerHTML = `<div class="empty">还没有参考图。把图片放进 inbox 文件夹，或点右上角上传。</div>`;
+        return;
+      }
+      visibleItems.forEach(item => {
+        const card = cardById(item.linked_card_id);
+        const tile = document.createElement("article");
+        tile.className = "image-tile";
+        tile.setAttribute("aria-selected", item.image_id === state.selectedImageId ? "true" : "false");
+        tile.innerHTML = `
+          <img class="thumb" src="${imageUrl(item)}" alt="${item.image_id}">
+          <div class="tile-body">
+            <p class="tile-title">${item.image_id}</p>
+            <div class="meta">${card ? card.shot_name : "未绑定任务卡"}</div>
+            <div class="chips">${(item.human_tags || []).slice(0, 3).map(tag => `<span class="chip active">${tag}</span>`).join("")}</div>
+          </div>
+        `;
+        tile.addEventListener("click", () => {
+          state.selectedImageId = item.image_id;
+          if (item.linked_card_id) state.selectedCardId = item.linked_card_id;
+          render();
+        });
+        imageGrid.appendChild(tile);
+      });
+    }
+
+    function renderInspector() {
+      const item = itemById(state.selectedImageId);
+      if (!item) {
+        const selectedCard = cardById(state.selectedCardId);
+        inspector.innerHTML = selectedCard ? `
+          <div class="analysis">
+            <h3>${selectedCard.shot_name}</h3>
+            <p class="small">先选择或上传一张参考图，再标注它和这个镜头的关系。</p>
+            <div class="field">
+              <label>推荐中文搜索词</label>
+              <div class="chips">${selectedCard.suggested_search_terms.zh.map(term => `<span class="chip">${term}</span>`).join("")}</div>
+            </div>
+            <div class="field">
+              <label>要避开</label>
+              <div class="chips">${selectedCard.avoid.map(term => `<span class="chip avoid">${term}</span>`).join("")}</div>
+            </div>
+          </div>
+        ` : `<div class="empty">请选择任务卡。</div>`;
+        return;
+      }
+
+      const cardOptions = [`<option value="">未绑定任务卡</option>`]
+        .concat(state.cards.map(card => `<option value="${card.card_id}" ${item.linked_card_id === card.card_id ? "selected" : ""}>${card.card_id} ${card.shot_name}</option>`))
+        .join("");
+      inspector.innerHTML = `
+        <img class="preview" src="${imageUrl(item)}" alt="${item.image_id}">
+        <div class="field">
+          <label>绑定任务卡</label>
+          <select id="cardSelect">${cardOptions}</select>
+        </div>
+        <div class="field">
+          <label>Human 标签</label>
+          <div class="tag-picker" id="tagPicker"></div>
+        </div>
+        <div class="field">
+          <label>Human 备注</label>
+          <textarea id="humanNote" placeholder="例：只要它的门框站位，不要它的电影感。">${item.human_note || ""}</textarea>
+        </div>
+        <div class="analysis">
+          <h3>Agent 待分析</h3>
+          <p class="small">保存 Human 标注后，后续分析会把这些图拆成景别、机位、空间、光线和提示词规则。</p>
+          <div class="field">
+            <label>当前文件</label>
+            <div class="path">${item.file_path}</div>
+          </div>
+        </div>
+      `;
+
+      const cardSelect = document.getElementById("cardSelect");
+      cardSelect.addEventListener("change", () => {
+        item.linked_card_id = cardSelect.value;
+        state.selectedCardId = cardSelect.value || state.selectedCardId;
+        state.dirty = true;
+        renderCards();
+        renderGrid();
+      });
+
+      const tagPicker = document.getElementById("tagPicker");
+      state.tagOptions.forEach(tag => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = (item.human_tags || []).includes(tag) ? "primary" : "";
+        button.textContent = tag;
+        button.addEventListener("click", () => {
+          const tags = new Set(item.human_tags || []);
+          if (tags.has(tag)) tags.delete(tag);
+          else tags.add(tag);
+          item.human_tags = [...tags];
+          state.dirty = true;
+          renderGrid();
+          renderInspector();
+        });
+        tagPicker.appendChild(button);
+      });
+
+      const note = document.getElementById("humanNote");
+      note.addEventListener("input", () => {
+        item.human_note = note.value;
+        state.dirty = true;
+      });
+    }
+
+    async function saveItems() {
+      await api("/api/items", {
+        method: "POST",
+        body: JSON.stringify({ items: state.items })
+      });
+      state.dirty = false;
+      showToast("标注已保存");
+    }
+
+    async function uploadFiles(files) {
+      for (const file of files) {
+        const data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        await api("/api/upload", {
+          method: "POST",
+          body: JSON.stringify({ filename: file.name, data })
+        });
+      }
+      await loadState();
+      showToast("图片已加入 inbox");
+    }
+
+    document.getElementById("refreshButton").addEventListener("click", async () => {
+      await api("/api/scan");
+      await loadState();
+      showToast("文件夹已刷新");
+    });
+
+    document.getElementById("saveButton").addEventListener("click", saveItems);
+
+    document.getElementById("showAllButton").addEventListener("click", () => {
+      state.showAll = true;
+      render();
+    });
+
+    document.getElementById("uploadInput").addEventListener("change", async event => {
+      await uploadFiles(event.target.files);
+      event.target.value = "";
+    });
+
+    document.getElementById("synthesisButton").addEventListener("click", async () => {
+      if (state.dirty) await saveItems();
+      const result = await api("/api/synthesize", { method: "POST", body: "{}" });
+      showToast(`已生成总结：${result.path}`);
+    });
+
+    window.addEventListener("beforeunload", event => {
+      if (!state.dirty) return;
+      event.preventDefault();
+      event.returnValue = "";
+    });
+
+    loadState().catch(error => {
+      inspector.innerHTML = `<div class="empty">加载失败：${error.message}</div>`;
+    });
+  </script>
+</body>
+</html>
