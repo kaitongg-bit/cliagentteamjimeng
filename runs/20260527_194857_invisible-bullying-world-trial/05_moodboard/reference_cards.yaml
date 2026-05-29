@@ -10,45 +10,48 @@ cards:
       - 狭小房间纵深
       - 背对镜头的人
       - 电脑屏幕作为实际光源
-      - 当代低配办公电脑
+      - 正常当代显示器或 MacBook
     avoid:
       - 赛博朋克剪辑室
       - 复古 CRT 电脑
       - 漂亮的电影化贫穷
+      - 极端破败或漏水苦难
       - 年代戏感
     suggested_search_terms:
       zh:
-        - 出租屋 门口 电脑 背影
-        - 旧小区出租屋 漏水 电脑桌
+        - 上海里弄老旧小区 出租屋 电脑桌
+        - 一线城市 老小区 单间 MacBook 工作
         - 屏幕光 背影 出租屋
       en:
-        - cramped apartment doorway computer back view
-        - low income room computer screen light
+        - old urban apartment room laptop desk screen light
+        - messy lived-in apartment laptop work desk
     human_notes: 
   - card_id: MB_002
     scene_id: S01
-    shot_name: 漏水房间：盆、剧本、插线板、屏幕反光
+    shot_name: 不打理的工作台：桌面、线缆、屏幕反光
     status: unresolved
-    dramatic_function: 把失业处境和剪辑劳动压缩进一个物理危险的空间。
-    viewer_should_feel: 不是苦情，是一种生活随时短路的低级恐惧。
+    dramatic_function: 把失业处境和剪辑劳动压缩进一个长期无人整理的生活/工作混合空间。
+    viewer_should_feel: 不是穷苦奇观，而是一个人被工作和生活慢慢堆住。
     look_for:
-      - 水盆位置
-      - 桌面与地面的空间关系
-      - 潮湿墙面
-      - 插线板的现实危险
+      - 正常电脑或 MacBook
+      - 桌面杂物层次
+      - 线缆和充电器
+      - 外卖/纸张/硬盘
       - 屏幕反光
     avoid:
       - 惊悚片电火花
       - 过度戏剧化漏水
       - 摆拍道具清单
+      - 复古电脑房
+      - 极端贫穷化
     suggested_search_terms:
       zh:
-        - 出租屋 漏水 水盆 插线板
-        - 旧房间 潮湿 墙面 电脑桌
-        - 雨天 室内 漏水
+        - 出租屋 电脑桌 杂物 MacBook
+        - 老小区单间 工作台 生活杂物
+        - 剪辑师 房间 电脑桌
       en:
-        - leaking apartment basin power strip desk
-        - damp room computer desk rain
+        - lived in apartment laptop desk clutter
+        - freelance editor messy desk apartment
     human_notes: 
   - card_id: MB_003
     scene_id: S02
@@ -188,9 +191,9 @@ cards:
     viewer_should_feel: 不是反转炫技，而是冷掉：人退场，生产继续。
     look_for:
       - 空椅子
-      - 还亮着的电脑
+      - 还亮着的电脑或 MacBook
       - 清晨灰光
-      - 水盆余波
+      - 未收拾的桌面
       - 房间无人但仍运行
     avoid:
       - 恐怖空房

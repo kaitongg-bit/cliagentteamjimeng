@@ -313,17 +313,19 @@ cards:
       - 狭小房间纵深
       - 背对镜头的人
       - 电脑屏幕作为实际光源
+      - 正常当代显示器或 MacBook
     avoid:
       - 赛博朋克剪辑室
       - 复古 CRT 电脑
       - 漂亮的电影化贫穷
+      - 极端破败或漏水苦难
     suggested_search_terms:
       zh:
-        - 出租屋 门口 电脑 背影
-        - 旧小区出租屋 漏水 电脑桌
+        - 上海里弄老旧小区 出租屋 电脑桌
+        - 一线城市 老小区 单间 MacBook 工作
       en:
-        - cramped apartment doorway computer back view
-        - low income room computer screen light
+        - old urban apartment room laptop desk screen light
+        - messy lived-in apartment laptop work desk
 ```
 
 ### moodboard_items.json
@@ -352,7 +354,7 @@ cards:
 第一版 MVP 先为这些镜头生成任务卡：
 
 1. 从出租屋门口看见许临在电脑前。
-2. 漏水房间：盆、剧本、插线板、屏幕反光。
+2. 不打理的工作台：桌面、线缆、屏幕反光。
 3. 剪辑屏幕制造第一轮“男明星有罪”叙事。
 4. 外卖骑手在雨夜看竖屏舆论视频。
 5. 电梯走廊：道歉涂鸦和广告脸。
