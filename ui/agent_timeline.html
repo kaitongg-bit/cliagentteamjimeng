@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《定稿》Agent Team 时间线</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --panel: #ffffff;
+      --ink: #202532;
+      --muted: #667085;
+      --line: #d9dee8;
+      --soft: #eef1f5;
+      --blue: #2457c5;
+      --human: #9a6a13;
+      --showrunner: #2457c5;
+      --writer: #137a63;
+      --opposition: #b33a3a;
+      --audience: #6b4cb3;
+      --director: #255f85;
+      --critic: #8f3d3d;
+      --visual: #3f7d57;
+      --prompt: #7447a6;
+      --tool: #5d6678;
+      --eval: #3f4b5f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    input, select, button {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+    button {
+      cursor: pointer;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 270px minmax(420px, 1fr) 42%;
+      min-height: calc(100vh - 78px);
+    }
+    aside, section {
+      min-width: 0;
+    }
+    .filters {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      background: #eef1f5;
+      max-height: calc(100vh - 78px);
+      overflow: auto;
+    }
+    .timeline {
+      padding: 18px;
+      max-height: calc(100vh - 78px);
+      overflow: auto;
+    }
+    .detail {
+      border-left: 1px solid var(--line);
+      background: var(--panel);
+      max-height: calc(100vh - 78px);
+      overflow: auto;
+    }
+    .panel-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .filter-group {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+    .filter-button {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      text-align: left;
+      background: var(--panel);
+    }
+    .filter-button.active {
+      border-color: var(--blue);
+      outline: 2px solid rgba(36, 87, 197, 0.16);
+    }
+    .count {
+      color: var(--muted);
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--panel);
+    }
+    .summary-box strong {
+      display: block;
+      font-size: 20px;
+    }
+    .summary-box span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .timeline-list {
+      position: relative;
+      display: grid;
+      gap: 12px;
+    }
+    .item {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 12px;
+      cursor: pointer;
+    }
+    .round {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-left-width: 5px;
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px;
+    }
+    .item.selected .card {
+      border-color: var(--blue);
+      outline: 2px solid rgba(36, 87, 197, 0.16);
+    }
+    .card.human { border-left-color: var(--human); }
+    .card.showrunner { border-left-color: var(--showrunner); }
+    .card.writer { border-left-color: var(--writer); }
+    .card.opposition { border-left-color: var(--opposition); }
+    .card.audience { border-left-color: var(--audience); }
+    .card.director { border-left-color: var(--director); }
+    .card.critic { border-left-color: var(--critic); }
+    .card.storyboard { border-left-color: var(--director); }
+    .card.visual { border-left-color: var(--visual); }
+    .card.prompt { border-left-color: var(--prompt); }
+    .card.tool { border-left-color: var(--tool); }
+    .card.single { border-left-color: #8a6a00; }
+    .card.eval { border-left-color: var(--eval); }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    h2 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+    .note, .excerpt {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .excerpt {
+      margin-top: 6px;
+      color: #4d586b;
+    }
+    .detail-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .detail-head h2 {
+      font-size: 20px;
+    }
+    .path {
+      margin-top: 10px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+    .content {
+      padding: 18px;
+    }
+    .markdown {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      background: #172033;
+      color: #eef4ff;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .empty {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      color: var(--muted);
+      background: var(--panel);
+    }
+    .loading {
+      color: var(--muted);
+      padding: 18px;
+    }
+    .error {
+      color: #9a3412;
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+    @media (max-width: 1180px) {
+      main {
+        grid-template-columns: 240px minmax(0, 1fr);
+      }
+      .detail {
+        grid-column: 1 / -1;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        max-height: none;
+      }
+    }
+    @media (max-width: 760px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+      main {
+        grid-template-columns: 1fr;
+      }
+      .filters, .timeline, .detail {
+        max-height: none;
+      }
+      .filters {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>《定稿》Agent Team 时间线</h1>
+      <p class="subtitle">按真实推进顺序展示 Human、各 Agent、Showrunner、工具执行和评估产物。点开任意节点可查看原始文件。</p>
+    </div>
+    <div class="toolbar">
+      <input id="searchInput" type="search" placeholder="搜索标题/agent/摘要">
+      <select id="stageSelect"></select>
+      <button id="resetButton" type="button">重置</button>
+    </div>
+  </header>
+
+  <main>
+    <aside class="filters">
+      <p class="panel-title">Agent Filter</p>
+      <div id="agentFilters" class="filter-group"></div>
+      <p class="panel-title">说明</p>
+      <p class="note">这个页面展示的是过程产物，不等同于评分结论。Single Agent 目前只有 baseline prompt，还没有完整对照产物。</p>
+    </aside>
+    <section class="timeline">
+      <div class="summary-grid">
+        <div class="summary-box"><strong id="totalCount">0</strong><span>过程节点</span></div>
+        <div class="summary-box"><strong id="agentCount">0</strong><span>参与角色</span></div>
+        <div class="summary-box"><strong id="visibleCount">0</strong><span>当前显示</span></div>
+      </div>
+      <div id="timelineList" class="timeline-list"></div>
+    </section>
+    <aside class="detail" id="detailPanel">
+      <div class="empty">请选择一个时间线节点。</div>
+    </aside>
+  </main>
+
+  <script>
+    let data = { project: "《定稿》", run: "", items: [], agents: [], stages: [] };
+    const contentCache = new Map();
+    const state = {
+      agent: "全部",
+      stage: "全部",
+      query: "",
+      selectedIndex: null
+    };
+
+    const agentFilters = document.getElementById("agentFilters");
+    const stageSelect = document.getElementById("stageSelect");
+    const searchInput = document.getElementById("searchInput");
+    const timelineList = document.getElementById("timelineList");
+    const detailPanel = document.getElementById("detailPanel");
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function countByAgent(agent) {
+      if (agent === "全部") return data.items.length;
+      return data.items.filter(item => item.agent === agent).length;
+    }
+
+    function showLoadError(message) {
+      timelineList.innerHTML = `<div class="empty error">${escapeHtml(message)}</div>`;
+      detailPanel.innerHTML = `<div class="empty">时间线索引页需要通过本地服务打开：<br>http://127.0.0.1:8765/timeline</div>`;
+    }
+
+    function setupFilters() {
+      const agents = ["全部", ...data.agents];
+      agentFilters.innerHTML = "";
+      agents.forEach(agent => {
+        const button = document.createElement("button");
+        button.className = "filter-button";
+        button.type = "button";
+        button.dataset.agent = agent;
+        button.innerHTML = `<span>${escapeHtml(agent)}</span><span class="count">${countByAgent(agent)}</span>`;
+        button.addEventListener("click", () => {
+          state.agent = agent;
+          render();
+        });
+        agentFilters.appendChild(button);
+      });
+
+      stageSelect.innerHTML = `<option value="全部">全部阶段</option>` + data.stages.map(stage => `<option value="${escapeHtml(stage)}">${escapeHtml(stage)}</option>`).join("");
+      stageSelect.addEventListener("change", () => {
+        state.stage = stageSelect.value;
+        render();
+      });
+      searchInput.addEventListener("input", () => {
+        state.query = searchInput.value.trim().toLowerCase();
+        render();
+      });
+      document.getElementById("resetButton").addEventListener("click", () => {
+        state.agent = "全部";
+        state.stage = "全部";
+        state.query = "";
+        searchInput.value = "";
+        stageSelect.value = "全部";
+        render();
+      });
+    }
+
+    function visibleItems() {
+      return data.items.filter(item => {
+        if (state.agent !== "全部" && item.agent !== state.agent) return false;
+        if (state.stage !== "全部" && item.stage !== state.stage) return false;
+        if (!state.query) return true;
+        const haystack = `${item.title} ${item.agent} ${item.stage} ${item.path} ${item.note} ${item.excerpt}`.toLowerCase();
+        return haystack.includes(state.query);
+      });
+    }
+
+    function renderTimeline(items) {
+      timelineList.innerHTML = "";
+      if (!items.length) {
+        timelineList.innerHTML = `<div class="empty">没有匹配的产物。</div>`;
+        return;
+      }
+      items.forEach(item => {
+        const row = document.createElement("article");
+        row.className = `item ${item.index === state.selectedIndex ? "selected" : ""}`;
+        row.innerHTML = `
+          <div class="round">R${escapeHtml(item.round)}</div>
+          <div class="card ${item.agentClass}">
+            <div class="meta">
+              <span class="pill">${escapeHtml(item.agent)}</span>
+              <span class="pill">${escapeHtml(item.stage)}</span>
+              <span>${escapeHtml(item.extension)} · ${item.size} 字符</span>
+            </div>
+            <h2>${escapeHtml(item.title)}</h2>
+            <p class="note">${escapeHtml(item.note)}</p>
+            <p class="excerpt">${escapeHtml(item.excerpt)}</p>
+          </div>
+        `;
+        row.addEventListener("click", async () => {
+          state.selectedIndex = item.index;
+          render();
+          await renderDetail();
+        });
+        timelineList.appendChild(row);
+      });
+    }
+
+    async function loadContent(item) {
+      if (contentCache.has(item.path)) return contentCache.get(item.path);
+      const response = await fetch(`/api/artifact?path=${encodeURIComponent(item.path)}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: "加载失败" }));
+        throw new Error(error.error || "加载失败");
+      }
+      const payload = await response.json();
+      const content = payload.content || "";
+      contentCache.set(item.path, content);
+      return content;
+    }
+
+    async function renderDetail() {
+      const item = data.items.find(entry => entry.index === state.selectedIndex);
+      if (!item) {
+        detailPanel.innerHTML = `<div class="empty">请选择一个时间线节点。页面只预加载索引，点开节点后才读取原始 md/json。</div>`;
+        return;
+      }
+      detailPanel.innerHTML = `
+        <div class="detail-head">
+          <div class="meta">
+            <span class="pill">${escapeHtml(item.agent)}</span>
+            <span class="pill">${escapeHtml(item.stage)}</span>
+            <span class="pill">R${escapeHtml(item.round)}</span>
+          </div>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p class="note">${escapeHtml(item.note)}</p>
+          <div class="path">${escapeHtml(item.path)}</div>
+        </div>
+        <div class="content">
+          <div class="loading">正在加载这份过程产物...</div>
+        </div>
+      `;
+      try {
+        const content = await loadContent(item);
+        const contentNode = detailPanel.querySelector(".content");
+        contentNode.innerHTML = `<pre class="markdown">${escapeHtml(content)}</pre>`;
+      } catch (error) {
+        const contentNode = detailPanel.querySelector(".content");
+        contentNode.innerHTML = `<div class="empty error">${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    function render() {
+      const items = visibleItems();
+      document.getElementById("totalCount").textContent = data.items.length;
+      document.getElementById("agentCount").textContent = data.agents.length;
+      document.getElementById("visibleCount").textContent = items.length;
+      [...agentFilters.children].forEach(button => {
+        button.classList.toggle("active", button.dataset.agent === state.agent);
+      });
+      renderTimeline(items);
+    }
+
+    async function boot() {
+      timelineList.innerHTML = `<div class="empty">正在读取 Agent Team 时间线索引...</div>`;
+      try {
+        const response = await fetch("/api/timeline");
+        if (!response.ok) throw new Error("没有读到时间线索引");
+        data = await response.json();
+        state.selectedIndex = data.items[0]?.index || null;
+        setupFilters();
+        render();
+        await renderDetail();
+      } catch (error) {
+        showLoadError(error.message || "时间线加载失败");
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>

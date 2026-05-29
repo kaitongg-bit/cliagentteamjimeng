@@ -31,11 +31,13 @@ agents/
 ui/
   index.html                     # 轻量可视化流程界面
   moodboard.html                 # Moodboard MVP 工作台
+  agent_timeline.html            # Agent Team 过程产物时间线
 schemas/
   artifacts.schema.json          # 过程产物结构
 scripts/
   film_agent_team.py             # 本地实验脚手架
   moodboard_server.py            # Moodboard MVP 本地服务
+  build_agent_timeline.py        # 生成 Agent Team 时间线 HTML
 examples/
   briefs/cannes_microfilm_brief.md
 runs/
@@ -121,6 +123,22 @@ http://127.0.0.1:8765/moodboard
 ```text
 docs/moodboard_mvp_runbook.md
 ```
+
+## Agent Team 过程时间线
+
+生成 HTML：
+
+```bash
+python3 scripts/build_agent_timeline.py
+```
+
+启动本地服务后打开：
+
+```text
+http://127.0.0.1:8765/timeline
+```
+
+这个页面按推进顺序展示 Human、编剧、反方编剧、观众、Showrunner、导演、审片人、美术、分镜、Prompt 和工具执行产物，方便复盘 Agent Team 发生过什么动作。
 
 ## 当前定位
 

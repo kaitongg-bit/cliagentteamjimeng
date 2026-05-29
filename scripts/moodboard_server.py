@@ -12,12 +12,15 @@ import re
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
+
+from build_agent_timeline import build_items, timeline_payload
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RUN = ROOT / "runs" / "20260527_194857_invisible-bullying-world-trial"
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+ARTIFACT_EXTS = {".md", ".json", ".yaml", ".yml", ".txt", ".csv"}
 
 DEFAULT_CARDS = [
     {
@@ -405,13 +408,51 @@ def make_handler(store: MoodboardStore):
             raw = self.rfile.read(length).decode("utf-8")
             return json.loads(raw or "{}")
 
+        def send_timeline(self) -> None:
+            items = build_items(store.run_dir, include_content=False)
+            self.send_json(timeline_payload(items, store.run_dir))
+
+        def send_artifact(self) -> None:
+            query = parse_qs(urlparse(self.path).query)
+            rel_path = query.get("path", [""])[0]
+            if not rel_path:
+                self.send_json({"error": "missing path"}, HTTPStatus.BAD_REQUEST)
+                return
+            target = (ROOT / unquote(rel_path).lstrip("/")).resolve()
+            try:
+                target.relative_to(ROOT.resolve())
+            except ValueError:
+                self.send_json({"error": "path outside workspace"}, HTTPStatus.BAD_REQUEST)
+                return
+            if not target.is_file() or target.suffix.lower() not in ARTIFACT_EXTS:
+                self.send_json({"error": "artifact not found"}, HTTPStatus.NOT_FOUND)
+                return
+            content = target.read_text(encoding="utf-8", errors="replace")
+            self.send_json(
+                {
+                    "path": target.relative_to(ROOT).as_posix(),
+                    "content": content,
+                    "extension": target.suffix.lower().lstrip("."),
+                    "size": len(content),
+                }
+            )
+
         def do_GET(self) -> None:  # noqa: N802
             path = urlparse(self.path).path
             if path in {"/", "/moodboard", "/moodboard.html"}:
                 self.send_file(ROOT / "ui" / "moodboard.html")
                 return
+            if path in {"/timeline", "/agent-timeline", "/agent_timeline.html"}:
+                self.send_file(ROOT / "ui" / "agent_timeline.html")
+                return
             if path == "/api/state":
                 self.send_json(store.state())
+                return
+            if path == "/api/timeline":
+                self.send_timeline()
+                return
+            if path == "/api/artifact":
+                self.send_artifact()
                 return
             if path == "/api/scan":
                 self.send_json({"ok": True, "items": store.scan()})
