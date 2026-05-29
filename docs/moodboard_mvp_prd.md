@@ -1,92 +1,97 @@
 # Moodboard MVP PRD
 
-## 1. Product Thesis
+## 1. 产品判断
 
-For aesthetic-heavy creative tasks, the agent team should not generate final-looking images too early.
+对于审美权重很高的创作任务，Agent Team 不应该太早生成一张“看起来像答案”的图。
 
-The MVP exists to help the human build a prior expectation before AI generation. Agents should turn a fuzzy visual desire into searchable reference tasks, collect human taste signals, analyze reference images, and only then produce prompts or shot designs.
+这个 MVP 的核心目的，是在 AI 生图/生视频之前，帮助 Human 先建立自己的视觉预期。Agent 要做的不是抢先给答案，而是把用户模糊的审美感觉拆成可寻找、可标注、可分析、可复用的参考任务。
 
-Core belief:
+核心信念：
 
-> AI should scaffold the user's imagination, not replace it with the first plausible image.
+> AI 应该帮助用户长出自己的想象，而不是用第一张还不错的 AI 图替用户决定想象。
 
-## 2. Current Problem
+## 2. 当前问题
 
-In the Dinggao look test, the agent team generated concept images before the human had a clear visual expectation.
+在《定稿》的视觉测试里，Agent Team 在 Human 尚未形成清晰视觉预期前，就直接生成了概念图。
 
-This caused three issues:
+这暴露了几个问题：
 
-- The AI image became a premature answer and pulled the human's taste toward it.
-- Prompt writing compressed too many art-direction decisions into one long prompt.
-- The output looked like "dirty cinematic realism" instead of "badly captured reality".
+- AI 图会变成过早的答案，把 Human 的判断带跑。
+- 提示词会把太多美术、摄影、导演判断塞进一段长描述。
+- 结果容易变成“脏一点的电影剧照”，而不是 Human 真正想找的“廉价设备拍坏了的现实”。
+- Human 会更难说清楚“哪里不对”，因为生成图已经先占据了想象空间。
 
-The workflow needs a stage before image generation:
+所以，在生图之前需要增加一个阶段：
 
-- Agent proposes what references to look for.
-- Human collects images and marks what is useful.
-- Agent analyzes those references into shot rules.
-- Only then does the prompt agent write generation prompts.
+- Agent 先提出应该找什么参考。
+- Human 自己收集图，并标注图里哪些东西有用、哪些东西不要。
+- Agent 对参考图做图像理解，抽取镜头、空间、站位、影调、质感规则。
+- Prompt Agent 最后才把这些规则转成生图/生视频提示词。
 
-## 3. Users
+## 3. 用户
 
-Primary user:
+主要用户：
 
-- AI video creator / director who has taste but may not yet have precise film-language vocabulary.
-- Wants to make shorts, series, ads, music videos, animation, or platform-native video.
-- Needs help externalizing visual intuition before committing to AI generation.
+- AI 视频创作者 / 导演 / 编剧型创作者。
+- 有审美直觉，但不一定有完整电影语言词汇。
+- 想做短片、短剧、广告、MV、动画、平台热播内容等。
+- 需要在 AI 生成前，先把脑中感觉外化成可讨论的视觉资产。
 
-Secondary users:
+次级用户：
 
-- Screenwriter using references to clarify tone.
-- Director / cinematographer agent converting taste into camera rules.
-- Prompt structurer agent converting visual rules into generation prompts.
+- 编剧：用参考图明确气质与情绪。
+- 导演 Agent：把感觉转成场面调度和观众体验。
+- 摄影 Agent：把感觉转成机位、景别、光线、运动。
+- 美术概念 Agent：把感觉转成空间、材质、道具、色彩。
+- Prompt Agent：把已确认的视觉规则转成短而可控的提示词。
 
-## 4. MVP Goal
+## 4. MVP 目标
 
-Create a lightweight local moodboard workspace where:
+做一个轻量本地 Moodboard 工作台，让用户可以：
 
-- Agents generate "reference search cards" for key shots.
-- The human drops images into a local folder.
-- The UI shows those images next to the cards.
-- The human labels each image by what should be learned from it.
-- Agents analyze selected images and produce reusable visual rules for storyboard and prompt generation.
+- 看到 Agent 为关键镜头生成的“寻图任务卡”。
+- 把参考图直接丢进本机文件夹。
+- 在前端看到这些图片。
+- 给每张图标注“只要它的什么 / 不要它的什么”。
+- 让 Agent 根据标注做图像理解和视觉规则总结。
+- 把这些规则交给后续分镜、提示词、生图、生视频环节。
 
-## 5. Non-Goals
+## 5. 非目标
 
-MVP should not:
+MVP 暂时不做：
 
-- Become a full design tool like Figma.
-- Require cloud upload or account systems.
-- Auto-scrape copyrighted images.
-- Generate final film stills before human taste calibration.
-- Pretend reference images can be copied directly.
+- 完整设计工具，不做 Figma。
+- 云端账号系统。
+- 自动爬取版权图片。
+- 在 Human 完成感觉校准前生成最终风格图。
+- 让参考图被直接复制，只抽取结构、光线、空间、站位等可迁移规则。
 
-## 6. Success Criteria
+## 6. 成功标准
 
-The MVP is useful if:
+这个 MVP 有价值的判断标准：
 
-- The human can add 10-30 reference images in under 5 minutes.
-- Each image can be tagged as "use / avoid / only use X".
-- Agents can summarize references into concrete shot rules.
-- Later prompts become shorter, more controlled, and easier for the human to judge.
-- The human can say why an AI output is wrong before seeing the next AI output.
+- Human 可以在 5 分钟内放入 10-30 张参考图。
+- 每张图可以被标注为“靠近 / 远离 / 只要某个维度”。
+- Agent 能把参考图总结成具体镜头规则，而不是泛泛说“氛围压抑”。
+- 后续提示词更短、更结构化、更容易被 Human 判断对错。
+- Human 在看到下一张 AI 图之前，已经能说出自己期待什么、不期待什么。
 
-## 7. Core Workflow
+## 7. 核心流程
 
-### Step 1: Agent Creates Reference Search Cards
+### Step 1：Agent 生成寻图任务卡
 
-For each key shot, the showrunner asks relevant agents to create a card.
+Showrunner 先挑出需要视觉校准的关键镜头，再让相关 Agent 为每个镜头生成一张卡。
 
-Agents involved:
+参与 Agent：
 
-- Showrunner: chooses which shots need moodboard help.
-- Director: defines dramatic purpose and viewer feeling.
-- Cinematographer: defines camera position, shot size, lens feeling, light source.
-- Visual concept designer: defines space, texture, color, references to search.
-- Editor: defines where the image sits in rhythm.
-- Prompt structurer: records what visual facts may later become prompts, but does not generate yet.
+- Showrunner：判断哪些镜头必须先做 Moodboard，避免过早生图。
+- 导演：定义镜头的戏剧功能和观众感受。
+- 摄影：定义机位、景别、人物距离、光源、镜头运动。
+- 美术概念：定义空间、材质、道具、色彩和参考方向。
+- 剪辑：定义这个镜头在节奏中的作用。
+- Prompt Structurer：记录哪些视觉事实未来可进入提示词，但此阶段不急着写最终 prompt。
 
-Card fields:
+任务卡字段：
 
 ```yaml
 card_id:
@@ -95,17 +100,17 @@ shot_name:
 dramatic_function:
 viewer_should_feel:
 look_for:
-  - character blocking
-  - spatial relationship
-  - shot size
-  - camera position
-  - light / color
-  - texture / medium
+  - 人物站位
+  - 空间关系
+  - 景别
+  - 机位
+  - 光线 / 色温
+  - 质感 / 媒介
 avoid:
-  - wrong genre
-  - wrong era
-  - wrong class signal
-  - over-stylized risk
+  - 错误类型
+  - 错误年代
+  - 错误阶层信号
+  - 过度风格化风险
 suggested_search_terms:
   zh:
   en:
@@ -115,30 +120,30 @@ reference_film_or_video_targets:
 human_notes:
 ```
 
-### Step 2: Human Collects References
+### Step 2：Human 收集参考图
 
-The MVP creates a local folder:
+MVP 为项目创建本地文件夹：
 
 ```text
 runs/<project_id>/05_moodboard/inbox/
 ```
 
-The human can put screenshots, stills, web images, phone photos, or frame grabs into the folder.
+Human 可以把截图、电影帧、网页图片、手机照片、短视频截帧放进去。
 
-Supported file types:
+支持格式：
 
 - `.png`
 - `.jpg`
 - `.jpeg`
 - `.webp`
 
-The UI watches or refreshes this folder and displays new images.
+前端可以通过刷新按钮扫描这个文件夹并展示新图片。
 
-### Step 3: Human Tags Images
+### Step 3：Human 标注图片
 
-The human does not need to write formal critique. They label what the image is useful for.
+Human 不需要写正式审美报告，只需要标注这张图“哪里有用”。
 
-Required tags:
+基础标签：
 
 - `靠近`
 - `远离`
@@ -151,15 +156,23 @@ Required tags:
 - `只要人物距离`
 - `危险但有一点可学`
 
-Optional free note:
+自由备注示例：
 
 ```text
 我只要它的门框站位，不要它的电影感。
 ```
 
-### Step 4: Agent Analyzes References
+```text
+这个空间压迫感对，但电脑太复古，不要年代戏感。
+```
 
-For selected images, the image-analysis pass extracts:
+```text
+只要这种人物被房间吞掉的比例，不要这种漂亮打光。
+```
+
+### Step 4：Agent 做图像理解
+
+对被 Human 标注过的图，Agent 分析：
 
 ```yaml
 image_id:
@@ -181,96 +194,98 @@ what_to_avoid:
 prompt_ready_rules:
 ```
 
-The agent must separate:
+Agent 必须区分：
 
-- What the human wants to copy structurally.
-- What should not be copied stylistically.
-- What can be translated into storyboard.
-- What can be translated into prompts.
+- Human 想学习的是结构，还是影调，还是站位，还是空间。
+- 哪些东西不能学。
+- 哪些规则应该进入分镜。
+- 哪些规则应该进入提示词。
+- 哪些规则应该进入负面提示词。
 
-### Step 5: Agent Produces Moodboard Synthesis
+### Step 5：Agent 生成 Moodboard 总结
 
-Output file:
+输出文件：
 
 ```text
 runs/<project_id>/05_moodboard/moodboard_synthesis.md
 ```
 
-Synthesis sections:
+总结内容：
 
-- Human taste summary.
-- Key accepted references.
-- Key rejected references.
-- Shot-by-shot camera / space / tone rules.
-- Prompt rules.
-- Negative prompt rules.
-- Open questions for the human.
+- Human 当前审美倾向。
+- 被接受的参考图和原因。
+- 被拒绝的参考图和原因。
+- 按镜头整理的空间 / 景别 / 机位 / 影调规则。
+- 可进入提示词的正向规则。
+- 可进入负面提示词的排除规则。
+- 还需要 Human 补充判断的问题。
 
-## 8. MVP UI
+## 8. MVP 界面
 
-### Layout
+### 页面布局
 
-Three-column working surface:
+三栏工作台：
 
 ```text
-Left: Reference Search Cards
-Center: Image Grid
-Right: Selected Image Inspector
+左侧：寻图任务卡
+中间：Moodboard 图片网格
+右侧：选中图片检查器
 ```
 
-### Left Column: Cards
+### 左栏：任务卡
 
-Each card shows:
+每张卡展示：
 
-- Shot name.
-- Dramatic function.
-- What to look for.
-- What to avoid.
-- Search terms.
-- Reference targets.
+- 镜头名。
+- 戏剧功能。
+- 要找什么。
+- 不要什么。
+- 推荐搜索词。
+- 推荐参考片 / 影像方向。
 
-Actions:
+操作：
 
-- Select card.
-- Mark card as resolved / unresolved.
-- Add human note.
+- 选中任务卡。
+- 标记已解决 / 未解决。
+- 添加 Human 备注。
 
-### Center Column: Moodboard Grid
+### 中栏：图片网格
 
-Shows images from:
+展示来自本地文件夹的图片：
 
 ```text
 runs/<project_id>/05_moodboard/inbox/
 ```
 
-Each image tile shows:
+每张图显示：
 
-- Thumbnail.
-- Filename.
-- Linked card.
-- Human tags.
-- Agent analysis status.
+- 缩略图。
+- 文件名。
+- 绑定的任务卡。
+- Human 标签。
+- Agent 分析状态。
 
-Actions:
+操作：
 
-- Link to selected card.
-- Tag image.
-- Mark as accepted / rejected.
-- Open larger preview.
+- 绑定到当前任务卡。
+- 添加标签。
+- 标记接受 / 拒绝。
+- 放大预览。
 
-### Right Column: Inspector
+### 右栏：图片检查器
 
-Shows selected image plus:
+展示选中图片和它的分析信息：
 
-- Human tags.
-- Human note.
-- Agent image analysis.
-- "Use this for" checklist.
-- "Avoid this" checklist.
+- 大图预览。
+- Human 标签。
+- Human 备注。
+- Agent 图像理解结果。
+- “用它的什么”清单。
+- “不要学它的什么”清单。
 
-## 9. Data Model
+## 9. 数据结构
 
-### File Structure
+### 文件结构
 
 ```text
 runs/<project_id>/05_moodboard/
@@ -289,19 +304,19 @@ runs/<project_id>/05_moodboard/
 cards:
   - card_id: MB_001
     scene_id: S01
-    shot_name: Doorway view of Xu Lin at desk
+    shot_name: 从门口看见许临在电脑前
     status: unresolved
-    dramatic_function: First proof of life pressure, not villainy.
-    viewer_should_feel: The room is stronger than the person.
+    dramatic_function: 第一次证明他不是操盘手，而是被生活压住的人。
+    viewer_should_feel: 房间比人更有力量，人像被空间吞掉。
     look_for:
-      - doorway blocking
-      - cramped room depth
-      - back-turned figure at desk
-      - screen as practical light
+      - 门口视角
+      - 狭小房间纵深
+      - 背对镜头的人
+      - 电脑屏幕作为实际光源
     avoid:
-      - cyberpunk edit room
-      - retro CRT computer
-      - beautiful cinematic poverty
+      - 赛博朋克剪辑室
+      - 复古 CRT 电脑
+      - 漂亮的电影化贫穷
     suggested_search_terms:
       zh:
         - 出租屋 门口 电脑 背影
@@ -322,147 +337,153 @@ cards:
     "human_tags": ["只要站位", "远离"],
     "human_note": "站位接近，但太电影化。",
     "agent_analysis": {
-      "shot_size": "wide shot",
-      "camera_position": "doorway, looking inward",
-      "subject_position": "right third, back turned",
-      "what_to_learn": ["door frame as foreground pressure"],
-      "what_to_avoid": ["polished lighting"]
+      "shot_size": "全景",
+      "camera_position": "门口向内看",
+      "subject_position": "人物在画面右侧三分之一，背对镜头",
+      "what_to_learn": ["门框作为前景压迫"],
+      "what_to_avoid": ["过于精致的布光"]
     }
   }
 ]
 ```
 
-## 10. Dinggao First MVP Cards
+## 10. 《定稿》首批任务卡
 
-The first version should create cards for these shots:
+第一版 MVP 先为这些镜头生成任务卡：
 
-1. Doorway view of Xu Lin at the editing desk.
-2. Leaking room: basin, script, power strip, screen reflection.
-3. Editing screen creates the first guilt narrative.
-4. Delivery rider watching vertical-video judgment in rain.
-5. Elevator corridor with apology pollution.
-6. Xu Lin's father restaurant being hit by review pressure.
-7. Public opinion montage on cheap screens.
-8. Final empty room: person gone, system still syncing.
+1. 从出租屋门口看见许临在电脑前。
+2. 漏水房间：盆、剧本、插线板、屏幕反光。
+3. 剪辑屏幕制造第一轮“男明星有罪”叙事。
+4. 外卖骑手在雨夜看竖屏舆论视频。
+5. 电梯走廊：道歉涂鸦和广告脸。
+6. 许临父亲餐饮店被差评流冲击。
+7. 廉价屏幕上的公共舆论蒙太奇。
+8. 最终空房间：人离开，系统还在同步。
 
-Each card should ask the human to find references for:
+每张卡都应该引导 Human 找：
 
-- Blocking / standing position.
-- Space pressure.
-- Shot size.
-- Camera angle.
-- Practical light.
-- Texture / medium.
-- What must be avoided.
+- 人物站位。
+- 空间压迫。
+- 景别。
+- 机位。
+- 实际光源。
+- 影像质感。
+- 必须避开的错误方向。
 
-## 11. Agent Team Responsibilities
+## 11. Agent Team 分工
 
 ### Showrunner
 
-- Decides when moodboard is required.
-- Selects the key shots.
-- Prevents premature image generation.
-- Records human decisions.
+- 判断什么时候必须进入 Moodboard 阶段。
+- 选择关键镜头。
+- 阻止过早生图。
+- 记录 Human 的决定。
 
-### Director
+### 导演 Agent
 
-- Defines emotional function per shot.
-- Rejects references that look good but harm the theme.
+- 定义每个镜头的情绪功能。
+- 拒绝“看起来好看但伤害主题”的参考。
 
-### Cinematographer
+### 摄影 Agent
 
-- Converts references into camera language.
-- Tracks shot size, angle, light, movement, and frame logic.
+- 把参考图转成摄影语言。
+- 追踪景别、机位、高度、光线、运动和画面逻辑。
 
-### Visual Concept Designer
+### 美术概念 Agent
 
-- Suggests reference domains.
-- Translates human taste into space, props, texture, color, and material rules.
+- 推荐参考领域。
+- 把 Human 的感觉翻译成空间、道具、材质、色彩规则。
 
-### Editor
+### 剪辑 Agent
 
-- Judges whether a reference supports the film's rhythm.
-- Flags images that are too iconic or too explanatory.
+- 判断参考图是否支持影片节奏。
+- 标记太像单张海报、太解释性、太抢戏的图。
 
-### Prompt Structurer
+### Prompt Structurer Agent
 
-- Does not write final prompts until the moodboard synthesis exists.
-- Converts accepted visual rules into concise prompt blocks.
-- Preserves negative constraints from rejected references.
+- 在 Moodboard 总结完成前，不写最终生图/生视频提示词。
+- 把已接受的视觉规则转成短提示词块。
+- 把被拒绝的方向写进负面约束。
 
-### Audience Panel
+### 观众 Agent
 
-- Reviews whether the visual direction manipulates the audience in the intended way.
-- Flags over-obvious or moralizing imagery.
+- 判断视觉方向是否会按照预期操控观众。
+- 标记过度说教、过度直白、过度站队的图像风险。
 
 ### Human Creative Director
 
-- Adds images.
-- Tags what is useful.
-- Gives final taste approval.
+- 添加参考图。
+- 标注每张图有用和无用的部分。
+- 做最终审美拍板。
 
-## 12. Implementation Plan
+## 12. 实现计划
 
-### Phase 1: Static Local MVP
+### Phase 1：静态本地 MVP
 
-Build a simple HTML/JS interface that:
+做一个简单 HTML/JS 页面：
 
-- Reads a generated `moodboard_items.json`.
-- Displays image thumbnails from the local project folder.
-- Allows manual tagging and notes in the browser.
-- Saves updated JSON through a small local server or export file.
+- 读取 `reference_cards.yaml`。
+- 读取 `moodboard_items.json`。
+- 展示本地图片缩略图。
+- 支持手动标注和写备注。
+- 支持导出更新后的 JSON。
 
-### Phase 2: Folder-Linked MVP
+### Phase 2：文件夹联动
 
-Add a local watcher / refresh action:
+加入刷新/扫描能力：
 
-- Scan `05_moodboard/inbox/`.
-- Add new image files to `moodboard_items.json`.
-- Display them automatically.
+- 扫描 `05_moodboard/inbox/`。
+- 把新图片写入 `moodboard_items.json`。
+- 在前端自动展示。
 
-### Phase 3: Agent Analysis Pass
+### Phase 3：Agent 图像分析
 
-Add a command:
+增加一个命令：
 
 ```text
 analyze-moodboard
 ```
 
-It should:
+它读取：
 
-- Read `reference_cards.yaml`.
-- Read `moodboard_items.json`.
-- Analyze tagged images.
-- Write `moodboard_synthesis.md`.
+- `reference_cards.yaml`
+- `moodboard_items.json`
+- Human 标签和备注
 
-### Phase 4: Prompt Handoff
-
-Prompt structurer reads:
+然后写出：
 
 - `moodboard_synthesis.md`
-- accepted references
-- rejected reference notes
 
-Then writes:
+### Phase 4：提示词交接
+
+Prompt Structurer 读取：
+
+- `moodboard_synthesis.md`
+- 被接受参考图规则
+- 被拒绝参考图规则
+
+然后写：
 
 - `team_jimeng_prompts.md`
 - `prompt_ledger.md`
 - `prompt_contradiction_check.md`
 
-## 13. Open Product Questions
+## 13. 产品问题
 
-- Should image files be copied into `accepted/` and `rejected/`, or only tagged in JSON?
-- Should the UI allow drag-and-drop upload, or is folder drop enough for MVP?
-- Should image analysis happen automatically when a tag changes, or only on a button click?
-- Should the human be able to compare AI-generated outputs against moodboard references side by side?
-- How much reference-image metadata should be stored to avoid copyright and privacy risk?
+还需要决定：
 
-## 14. MVP Acceptance Test
+- 图片被接受/拒绝后，是复制到 `accepted/`、`rejected/`，还是只在 JSON 里标记？
+- MVP 是否需要拖拽上传，还是本机文件夹投放就够？
+- 图像分析是点击按钮触发，还是标签变化后自动触发？
+- 是否需要把 AI 生成结果和 Moodboard 参考图并排比较？
+- 如何记录参考图来源，避免版权和隐私风险？
 
-For Dinggao, MVP is accepted when:
+## 14. MVP 验收标准
 
-- 8 reference cards are visible in the UI.
-- The human can drop at least 5 images into `inbox/` and see them.
-- The human can tag an image with "只要站位" and write a note.
-- The agent can read those tags and produce a moodboard synthesis.
-- The next generated prompt explicitly cites which moodboard rules it used and which rejected directions it avoided.
+对《定稿》来说，MVP 通过验收需要满足：
+
+- UI 能展示 8 张寻图任务卡。
+- Human 能把至少 5 张图片放进 `inbox/` 并在页面看到。
+- Human 能给图片打上 `只要站位` 等标签，并写备注。
+- Agent 能读取这些标签，生成 Moodboard 总结。
+- 下一次生图提示词必须明确引用：用了哪些 Moodboard 规则，避开了哪些被拒绝方向。
