@@ -15,6 +15,8 @@ visible_inputs:
 
 runtime_rules:
   - 不写长篇堆词 prompt。
+  - 默认先输出“短结构提示词卡”，不使用 JSON 外壳；按固定字段顺序写，便于 Human 快速判断与修改。
+  - 除非 Human 明确要求详细版，每个字段只保留 1-2 个关键判断，最终提示词控制在 120-220 中文字左右。
   - 每个 prompt 必须能追溯到 shot_id。
   - 每个 prompt 必须包含 subject、action、performance、camera、lighting、style_rules、continuity。
   - 必须删除互相矛盾的景别、背景、光线、动作。
@@ -29,20 +31,14 @@ outputs:
 
 output_template:
   shot_id:
-  duration:
-  story_function:
-  subject:
-  action:
-  performance:
-  camera:
-  composition:
-  lighting:
-  palette:
-  environment:
-  style_rules:
-  continuity:
-  negative:
-  final_jimeng_prompt:
+  画面目标:
+  主体/动作/表演:
+  空间/道具:
+  镜头/构图:
+  光线/色彩/质感:
+  负面约束:
+  即梦短提示词:
+  备注:
 
 self_check:
   - 是否冗长？
