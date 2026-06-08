@@ -207,6 +207,43 @@ ui/agent_timeline.html
 
 注意：当前 timeline 构建脚本主要为 Case 1 的完整流程写了详细时间线条目。Case 2 的文件已经完整落盘，但 timeline 模板还没有专门适配；目前建议直接看 Case 2 的文件路径列表。
 
+## 豆包 Showrunner + 豆包子 Agent
+
+仓库已加入一个本地 runner，用来验证 **豆包做 showrunner，豆包也做子 agent** 的方案。
+
+配置入口：
+
+```text
+.env.example
+docs/doubao_agent_team_runner.md
+scripts/agent_team_runner.py
+scripts/providers/doubao_ark.py
+```
+
+基本用法：
+
+```bash
+cp .env.example .env
+# 在 .env 中填写 ARK_API_KEY / ARK_MODEL
+
+python3 scripts/agent_team_runner.py screenplay-review \
+  --run runs/20260605_traffic_parasite
+```
+
+默认输出到：
+
+```text
+runs/<run_name>/02_agent_team_doubao/
+```
+
+这条链路会让豆包依次扮演 Showrunner、反方编剧、观众和编剧，并把每一步产物落盘。它用于对比：
+
+```text
+Single Agent
+Codex showrunner + Codex sub-agents
+Doubao showrunner + Doubao sub-agents
+```
+
 ## 暂时可以不看的后续模块
 
 这些模块对“AI 视频完整生产链路”有价值，但如果你现在只向研发或老板解释 **剧本 agent team 是否有效**，可以先跳过：
