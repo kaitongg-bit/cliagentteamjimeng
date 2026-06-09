@@ -52,7 +52,7 @@
 
 | 节点 | 子 agent | 为什么需要 |
 |---|---|---|
-| 招募/素材挖掘 | 主：素材招募 agent；必要时审：编剧 reviewer、美术概念 reviewer | 主 agent 筛出高价值可复用资产；如果结果仍像长清单，再让编剧查叙事必要性、美术查视觉锁定是否足够 |
+| 招募/素材挖掘 | 主：素材招募 agent；必要时审：提示词可执行 reviewer、导演/分镜 reviewer | 主 agent 先出短表；提示词 reviewer 检查能否直接喂给即梦和下游提示词；导演 reviewer 检查功能人物、场景可信度和镜头成立性 |
 | 分镜表 | 主：导演/分镜 agent；审：观众想象 reviewer、剪辑/声音 reviewer | 主 agent 切 10-15 秒 clip；观众 agent 代替 Human 逐步想象画面，查“看不看得懂/脑中是否能成片” |
 | 素材生成 | 主1：美术概念 agent 产出视觉圣经；主2：提示词 agent 产出即梦图片提示词；审：Human + 导演 reviewer | 美术先定视觉圣经，提示词再转成能出好图的即梦提示词，Human 和导演看生成结果是否成立 |
 | 视频生成 | 主：提示词结构 agent；审：Human | 视频结果主要由 Human 审，避免 agent 反复看视频消耗大量 token |
@@ -83,16 +83,14 @@
    - 一次性道具、普通群演、背景装饰、不会反复出现的场景不列入素材表；
    - 屏幕文字、logo、合同正文、热搜榜默认交给后期，不要求 AI 生图。
 2. Showrunner 先判断 v1 是否已经合格：如果它足够短、准、可执行，可以记录“无需 reviewer”，直接进入素材生成小样。
-3. 只有在 v1 仍然过长、漏掉叙事关键物、或人物/空间太泛时，启动编剧 reviewer。编剧 reviewer 不重写表格，只批评第一版：
-   - 哪些人物/道具/场地是叙事必需，不能漏；
-   - 哪些素材只是装饰，可能增加成本但不服务剧情；
-   - 哪些角色关系需要通过素材被观众一眼看懂；
-   - 哪些素材如果缺失，会让后续分镜无法成立。
-4. 只有在 v1 的视觉锁定不足时，启动美术概念 reviewer。美术概念 reviewer 不重写表格，只批评第一版：
-   - 哪些场景需要先找参考片/参考图，而不是直接生图；
-   - 哪些人物外貌、服装、空间质感需要统一成视觉圣经；
-   - 哪些道具需要白底图/三视图锁定；
-   - 哪些屏幕、文字、logo、品牌物料应该禁止生成清晰内容。
+3. 只有在 v1 仍然过长、漏掉功能人物、或资产不足以支持即梦和下游提示词时，启动提示词可执行 reviewer。它不重写表格，只批评第一版：
+   - 哪些人物、功能人群、屏幕元素虽然出现少，但会影响世界成立；
+   - 哪些内容必须保留为功能资产，哪些只应进入镜头提示词；
+   - 哪些人物、场景、物品描述还不够支持即梦稳定生成。
+4. 只有在 v1 仍然不足以支撑镜头调度和场面可信度时，启动导演/分镜 reviewer。它不重写表格，只批评第一版：
+   - 哪些一次性功能人物不能删；
+   - 哪些镜头需要的关系资产、位置资产或场面人群还没进表；
+   - 哪些内容其实属于分镜/调度，不应升级为独立生成资产。
 5. Showrunner 合并为 v2：
    - 吸收 reviewer 意见；
    - 删除低价值项；
@@ -108,8 +106,8 @@
 交付物：
 
 - `recruitment_material_breakdown_v1_by_recruitment_agent.md`
-- `recruitment_reviewer_screenwriter.md`
-- `recruitment_reviewer_visual_concept.md`
+- `recruitment_reviewer_prompt_structurer.md`
+- `recruitment_reviewer_director.md`
 - `recruitment_material_breakdown_agent_team.md`
 - `recruitment_material_breakdown_v1_vs_v2_comparison.md`
 
@@ -299,7 +297,7 @@
 初步预期：
 
 - 剧本：编剧 + 反方/观众/导演价值高。
-- 招募/素材挖掘：先看素材招募主 agent 是否能独立产出短、准、可执行的资产表；reviewer 只在 v1 过长、叙事必要性不清、视觉锁定不足时启用。
+- 招募/素材挖掘：先看素材招募主 agent 是否能独立产出短、准、可执行的资产表；reviewer 只在 v1 无法支撑即梦生成、功能人物遗漏、镜头世界不成立时启用。
 - 分镜表：导演/分镜主 agent + 观众想象 reviewer + 剪辑/声音 reviewer 价值高。
 - 素材生成：美术概念主 agent + 提示词主 agent + Human/导演 review 价值高。
 - 视频生成：提示词主 agent + Human review 为主；生成风险 reviewer 只在定位失败原因时启用。
