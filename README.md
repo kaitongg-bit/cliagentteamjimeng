@@ -8,6 +8,17 @@
 
 Moodboard MVP、即梦出图、粗分镜、细分镜、prompt pack 都已经有过探索，但在这份 README 里先标为后续模块，可以先不看。
 
+## 剧本之后的 SOP 实验计划
+
+老板提到“剧本测完后，应按照 SOP 继续测招募/素材挖掘、分镜、素材生成、视频生成”。  
+对应实验计划见：
+
+```text
+docs/sop_experiment_plan_recruitment_to_video.md
+```
+
+这份计划会继续使用《流量寄生虫》，按依赖矩阵逐步验证：剧本完成后先做招募/素材挖掘，再测下一段分镜与即梦视频提示词，并保留 single agent baseline 做对照。
+
 ## 现在验证什么
 
 本仓库当前重点是 **剧本阶段**。
