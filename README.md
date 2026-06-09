@@ -17,7 +17,7 @@ Moodboard MVP、即梦出图、粗分镜、细分镜、prompt pack 都已经有�
 docs/sop_experiment_plan_recruitment_to_video.md
 ```
 
-这份计划会继续使用《流量寄生虫》，按依赖矩阵逐步验证：剧本完成后先做招募/素材挖掘，再测下一段分镜与即梦视频提示词，并保留 single agent baseline 做对照。
+这份计划会继续使用《流量寄生虫》，按依赖矩阵逐步验证：剧本完成后先做招募/素材挖掘，再测下一段分镜与即梦视频提示词。剧本节点保留 single agent baseline；素材挖掘节点改为比较主素材 agent 的 v1 和 reviewer/Showrunner 修正后的 v2。
 
 ## 现在验证什么
 
@@ -95,6 +95,7 @@ agents/specs/director.yaml                   # 导演 Agent
 agents/specs/critic.yaml                     # 审片人 / 评审
 agents/specs/script_doctor.yaml              # 剧本医生
 agents/specs/visual_concept_designer.yaml    # 美术概念，后续看
+agents/specs/material_recruitment_agent.yaml # 素材招募/资产筛选，后续看
 agents/specs/storyboard_agents.yaml          # 粗细分镜，后续看
 agents/specs/prompt_structurer.yaml          # 即梦提示词结构化，后续看
 agents/specs/prompt_compliance_reviewer.yaml # 提示词过审，后续看
