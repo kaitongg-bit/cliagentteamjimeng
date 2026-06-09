@@ -35,6 +35,12 @@
 
 为避免 agent 太多烧 token，每个节点最多启用 2-3 个子 agent，加一个 Showrunner。
 
+关键原则：每个 SOP 节点都沿用剧本阶段已经验证过的结构：
+
+> 一个主 agent 负责干活产出第一版；少量 reviewer agent 负责提建议、批评、查漏；Showrunner 决定吸收哪些意见并收敛成最终产物。
+
+不要把多个 agent 都安排成并列产出者，否则很容易变成多份结果堆叠，而不是协作提质。
+
 ### 固定角色
 
 | 角色 | 何时使用 | 责任 |
@@ -46,10 +52,10 @@
 
 | 节点 | 子 agent | 为什么需要 |
 |---|---|---|
-| 招募/素材挖掘 | 素材挖掘 agent + 连续性/制片 agent | 从剧本抽取演员/场地/道具/可复用素材，检查是否漏项 |
-| 分镜表 | 导演/分镜 agent + 剪辑/声音 agent | 把剧本切成 10-15 秒可生成 clip，并补声音/节奏 |
-| 素材生成 | 美术概念 agent + 提示词结构 agent | 生人物/场景/道具参考图，控制风格和提示词结构 |
-| 视频生成 | 提示词结构 agent + 生成风险审查 agent | 生成即梦视频提示词，并检查屏幕、手、多人、文字等风险 |
+| 招募/素材挖掘 | 主：素材招募 agent；审：连续性/制片 reviewer、生成风险 reviewer | 主 agent 盘点演员/场地/道具/可复用素材，reviewer 查漏项和生成风险 |
+| 分镜表 | 主：导演/分镜 agent；审：剪辑/声音 reviewer、生成风险 reviewer | 主 agent 切 10-15 秒 clip，reviewer 查节奏、声音、生成难点 |
+| 素材生成 | 主：美术概念 agent；审：提示词结构 reviewer、Human | 主 agent 定审美和素材方向，reviewer 把它压成可生成提示词，Human 判断对不对 |
+| 视频生成 | 主：提示词结构 agent；审：生成风险 reviewer、剪辑 reviewer | 主 agent 写即梦视频提示词，reviewer 查屏幕、手、多人、文字和可剪辑性 |
 | 对照组 | single agent baseline | 干净上下文同题输出，用于对比 agent team 增益 |
 
 暂不启用：观众、反方编剧、审片人。  
@@ -69,17 +75,25 @@
 
 agent team 流程：
 
-1. 素材挖掘 agent 从剧本和前 6 分钟提示词里抽取：
+1. 素材招募 agent 作为主干活 agent，从剧本和前 6 分钟提示词里输出第一版“素材招募表”：
    - 角色：沈砚、张总、助理、运营、公关、法务、品牌方、摄影师、服务生。
    - 场地：电影奖舞台、后台侧廊、高层酒店庆功宴、服务通道、临时公关房间。
    - 道具：奖杯、手机、平板、笔记本电脑、文件夹、香槟杯、打印机、清洁车、备餐架。
    - 风格参考需求：正式电影奖内场、酒店后场、危机公关会议室、冷暖光对照。
-2. 连续性/制片 agent 检查：
+2. 连续性/制片 reviewer 不重写表格，只批评第一版：
    - 哪些素材可复用；
    - 哪些需要新生成；
+   - 哪些角色/道具/场地在前后 clip 中有连续性风险；
+   - 哪些素材命名、版本、引用方式不利于后续复用。
+3. 生成风险 reviewer 不重写表格，只批评第一版：
    - 哪些不应该生成可读文字；
    - 哪些会导致即梦失败。
-3. Showrunner 合并成“素材招募表”。
+   - 哪些素材应该用参考图/白底图先锁定；
+   - 哪些镜头不适合靠素材生成，应该靠剪辑或后期处理。
+4. Showrunner 合并：
+   - 吸收 reviewer 意见；
+   - 标注哪些是必备素材、可选素材、禁止生成素材；
+   - 输出最终“素材招募表”。
 
 single agent baseline：
 
@@ -87,6 +101,9 @@ single agent baseline：
 
 交付物：
 
+- `recruitment_material_breakdown_v1_by_recruitment_agent.md`
+- `recruitment_reviewer_continuity_production.md`
+- `recruitment_reviewer_generation_risk.md`
 - `recruitment_material_breakdown_agent_team.md`
 - `recruitment_material_breakdown_single_agent.md`
 - `recruitment_material_breakdown_comparison.md`
@@ -117,9 +134,10 @@ single agent baseline：
 
 启用角色：
 
-1. 编剧/连续性 agent：只定 `6:00-9:00` beat，确保不跳到后面剧情。
-2. 导演/分镜 agent：输出 12 个 15 秒段落。
-3. 提示词结构 + 生成风险 agent：压成即梦视频提示词，并做审查。
+1. 主：编剧/连续性 agent，只定 `6:00-9:00` beat，确保不跳到后面剧情。
+2. 审：导演/分镜 reviewer，批评 beat 是否可拍、空间是否连贯。
+3. 主：提示词结构 agent，基于 Showrunner 通过的 beat 压成即梦提示词。
+4. 审：生成风险 reviewer，检查屏幕、手、多人、可读文字等失败点。
 
 交付物：
 
@@ -153,8 +171,8 @@ single agent baseline：
 
 启用角色：
 
-- 美术概念 agent：定义画面质感、参考片方向、不要只写道具。
-- 提示词结构 agent：输出短、清楚、可投喂即梦的图片提示词。
+- 主：美术概念 agent，定义画面质感、参考片方向、不要只写道具。
+- 审：提示词结构 reviewer，批评美术设定是否能转成短、清楚、可投喂即梦的图片提示词。
 - Human：确认“像不像心里那部片”，不确认则不进入视频生成。
 
 交付物：
@@ -184,8 +202,8 @@ single agent baseline：
 
 启用角色：
 
-- 提示词结构 agent：根据实际生成结果改 prompt。
-- 生成风险审查 agent：判断失败是模型能力、素材不足，还是提示词问题。
+- 主：提示词结构 agent，根据实际生成结果改 prompt。
+- 审：生成风险 reviewer，判断失败是模型能力、素材不足，还是提示词问题。
 - Human：选择哪条继续迭代。
 
 交付物：
@@ -243,9 +261,9 @@ single agent baseline：
 初步预期：
 
 - 剧本：编剧 + 反方/观众/导演价值高。
-- 招募/素材挖掘：素材挖掘 + 连续性/制片价值高。
-- 分镜/视频提示词：导演/分镜 + 提示词结构 + 生成风险审查价值高。
-- 素材审美：美术概念 + Human 价值高。
+- 招募/素材挖掘：素材招募主 agent + 连续性/制片 reviewer + 生成风险 reviewer 价值高。
+- 分镜/视频提示词：导演/分镜主 agent 或提示词主 agent + 剪辑/生成风险 reviewer 价值高。
+- 素材审美：美术概念主 agent + 提示词结构 reviewer + Human 价值高。
 - 全程不建议堆很多 agent，Showrunner 必须负责收敛。
 
 ## 下一步建议
