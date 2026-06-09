@@ -52,14 +52,14 @@
 
 | 节点 | 子 agent | 为什么需要 |
 |---|---|---|
-| 招募/素材挖掘 | 主：素材招募 agent；审：连续性/制片 reviewer、生成风险 reviewer | 主 agent 盘点演员/场地/道具/可复用素材，reviewer 查漏项和生成风险 |
-| 分镜表 | 主：导演/分镜 agent；审：剪辑/声音 reviewer、生成风险 reviewer | 主 agent 切 10-15 秒 clip，reviewer 查节奏、声音、生成难点 |
-| 素材生成 | 主：美术概念 agent；审：提示词结构 reviewer、Human | 主 agent 定审美和素材方向，reviewer 把它压成可生成提示词，Human 判断对不对 |
-| 视频生成 | 主：提示词结构 agent；审：生成风险 reviewer、剪辑 reviewer | 主 agent 写即梦视频提示词，reviewer 查屏幕、手、多人、文字和可剪辑性 |
+| 招募/素材挖掘 | 主：素材招募 agent；审：编剧 reviewer、美术概念 reviewer | 主 agent 盘点演员/场地/道具/可复用素材；编剧查叙事必要性，美术查视觉世界是否足够 |
+| 分镜表 | 主：导演/分镜 agent；审：观众想象 reviewer、剪辑/声音 reviewer | 主 agent 切 10-15 秒 clip；观众 agent 代替 Human 逐步想象画面，查“看不看得懂/脑中是否能成片” |
+| 素材生成 | 主1：美术概念 agent 产出视觉圣经；主2：提示词 agent 产出即梦图片提示词；审：Human + 导演 reviewer | 美术先定视觉圣经，提示词再转成能出好图的即梦提示词，Human 和导演看生成结果是否成立 |
+| 视频生成 | 主：提示词结构 agent；审：Human | 视频结果主要由 Human 审，避免 agent 反复看视频消耗大量 token |
 | 对照组 | single agent baseline | 干净上下文同题输出，用于对比 agent team 增益 |
 
-暂不启用：观众、反方编剧、审片人。  
-原因：这轮重点不是重新评剧本，而是测试生产 SOP。只有当片段产物出现“看不懂/短剧/主题跑偏”时，再临时启用观众或审片人。
+暂不启用：反方编剧、审片人。  
+原因：这轮重点不是重新评剧本，而是测试生产 SOP。观众 agent 在分镜阶段启用，但职责不是评价故事价值，而是代替 Human 做逐步想象和可理解性检查。
 
 ## 实验设计
 
@@ -80,16 +80,16 @@ agent team 流程：
    - 场地：电影奖舞台、后台侧廊、高层酒店庆功宴、服务通道、临时公关房间。
    - 道具：奖杯、手机、平板、笔记本电脑、文件夹、香槟杯、打印机、清洁车、备餐架。
    - 风格参考需求：正式电影奖内场、酒店后场、危机公关会议室、冷暖光对照。
-2. 连续性/制片 reviewer 不重写表格，只批评第一版：
-   - 哪些素材可复用；
-   - 哪些需要新生成；
-   - 哪些角色/道具/场地在前后 clip 中有连续性风险；
-   - 哪些素材命名、版本、引用方式不利于后续复用。
-3. 生成风险 reviewer 不重写表格，只批评第一版：
-   - 哪些不应该生成可读文字；
-   - 哪些会导致即梦失败。
-   - 哪些素材应该用参考图/白底图先锁定；
-   - 哪些镜头不适合靠素材生成，应该靠剪辑或后期处理。
+2. 编剧 reviewer 不重写表格，只批评第一版：
+   - 哪些人物/道具/场地是叙事必需，不能漏；
+   - 哪些素材只是装饰，可能增加成本但不服务剧情；
+   - 哪些角色关系需要通过素材被观众一眼看懂；
+   - 哪些素材如果缺失，会让后续分镜无法成立。
+3. 美术概念 reviewer 不重写表格，只批评第一版：
+   - 哪些场景需要先找参考片/参考图，而不是直接生图；
+   - 哪些人物外貌、服装、空间质感需要统一成视觉圣经；
+   - 哪些道具需要白底图/三视图锁定；
+   - 哪些屏幕、文字、logo、品牌物料应该禁止生成清晰内容。
 4. Showrunner 合并：
    - 吸收 reviewer 意见；
    - 标注哪些是必备素材、可选素材、禁止生成素材；
@@ -102,8 +102,8 @@ single agent baseline：
 交付物：
 
 - `recruitment_material_breakdown_v1_by_recruitment_agent.md`
-- `recruitment_reviewer_continuity_production.md`
-- `recruitment_reviewer_generation_risk.md`
+- `recruitment_reviewer_screenwriter.md`
+- `recruitment_reviewer_visual_concept.md`
 - `recruitment_material_breakdown_agent_team.md`
 - `recruitment_material_breakdown_single_agent.md`
 - `recruitment_material_breakdown_comparison.md`
@@ -114,6 +114,8 @@ single agent baseline：
 |---|---|
 | 完整性 | 是否漏掉关键演员、场地、道具、屏幕类素材 |
 | 可复用性 | 是否识别哪些素材跨 clip 复用 |
+| 叙事必要性 | 是否区分“必须有”与“只是好看”的素材 |
+| 视觉统一性 | 是否能支撑后续视觉圣经和 moodboard |
 | 生成风险意识 | 是否标注可读文字、手部、多人、屏幕风险 |
 | Human 可用性 | 用户能不能直接照着找参考图/上传素材 |
 | 后续依赖价值 | 是否能直接喂给分镜和素材生成节点 |
@@ -136,8 +138,11 @@ single agent baseline：
 
 1. 主：编剧/连续性 agent，只定 `6:00-9:00` beat，确保不跳到后面剧情。
 2. 审：导演/分镜 reviewer，批评 beat 是否可拍、空间是否连贯。
-3. 主：提示词结构 agent，基于 Showrunner 通过的 beat 压成即梦提示词。
-4. 审：生成风险 reviewer，检查屏幕、手、多人、可读文字等失败点。
+3. 主：导演/分镜 agent，基于 Showrunner 通过的 beat 输出 12 个 15 秒分镜段落。
+4. 审：观众想象 reviewer，逐条复述自己脑中看到的画面，指出看不懂、空间断裂、情绪跳跃的地方。该 reviewer 用来替代 Human 的“凭空想象”能力。
+5. 审：剪辑/声音 reviewer，检查节奏、声音桥、转场和可剪辑性。
+6. 主：提示词结构 agent，把通过审核的分镜压成即梦视频提示词。
+7. 审：生成风险 reviewer，检查屏幕、手、多人、可读文字等失败点。
 
 交付物：
 
@@ -154,6 +159,7 @@ single agent baseline：
 
 - 是否继续保持“流程恐怖”，而不是变成热搜狗血。
 - 是否和 0:00-6:00 的人物、空间、手机/账号接管连续。
+- 观众 agent 是否能逐条想象出画面；如果观众 agent 复述不出来，说明分镜还不够清楚。
 - 是否每条提示词都能直接给即梦生成。
 - 是否减少可读文字、屏幕、手部、多人群像的失败概率。
 
@@ -171,14 +177,26 @@ single agent baseline：
 
 启用角色：
 
-- 主：美术概念 agent，定义画面质感、参考片方向、不要只写道具。
-- 审：提示词结构 reviewer，批评美术设定是否能转成短、清楚、可投喂即梦的图片提示词。
-- Human：确认“像不像心里那部片”，不确认则不进入视频生成。
+1. 主：美术概念 agent，先输出视觉圣经：
+   - 人物外貌/服装/年龄质感；
+   - 场景材质和空间真实感；
+   - 光线、镜头、影调；
+   - 可参考的电影/纪录片/摄影方向；
+   - 明确禁止的风格，如短剧豪华、AI 精致假、综艺棚拍。
+2. 主：提示词 agent，基于视觉圣经输出即梦图片提示词：
+   - 人物白底三视图提示词；
+   - 场景参考图提示词；
+   - 道具参考图提示词；
+   - 每条都短、结构清楚、减少可读文字和复杂手部。
+3. 审：Human，看生成结果是否符合心中质感。
+4. 审：导演 reviewer，看生成图是否能支撑后续分镜和镜头调度。
 
 交付物：
 
+- `visual_bible_v1_by_visual_concept_agent.md`
 - `visual_asset_prompt_pack_v1.md`
 - 即梦生成图或外部参考图索引
+- `visual_asset_director_review.md`
 - `asset_confirmation_report.md`
 
 评分重点：
@@ -187,6 +205,7 @@ single agent baseline：
 - 场景是否符合电影级真实感；
 - 是否避免“AI 精致假”“短剧豪华”“屏幕文字错误”；
 - Human 是否能明确说出要/不要。
+- 导演是否确认这些素材能服务后续镜头，而不是只作为漂亮概念图。
 
 ### 实验 D：视频生成小样
 
@@ -202,9 +221,9 @@ single agent baseline：
 
 启用角色：
 
-- 主：提示词结构 agent，根据实际生成结果改 prompt。
-- 审：生成风险 reviewer，判断失败是模型能力、素材不足，还是提示词问题。
-- Human：选择哪条继续迭代。
+1. 主：提示词结构 agent，根据实际生成结果改 prompt。
+2. 审：Human，判断视频是否成立。这里暂不默认让 agent 看视频，因为视频理解和逐帧审查会消耗大量 token。
+3. 可选：生成风险 reviewer。只有当 Human 无法判断失败原因时才启用，负责区分是模型能力、素材不足，还是提示词问题。
 
 交付物：
 
@@ -261,9 +280,10 @@ single agent baseline：
 初步预期：
 
 - 剧本：编剧 + 反方/观众/导演价值高。
-- 招募/素材挖掘：素材招募主 agent + 连续性/制片 reviewer + 生成风险 reviewer 价值高。
-- 分镜/视频提示词：导演/分镜主 agent 或提示词主 agent + 剪辑/生成风险 reviewer 价值高。
-- 素材审美：美术概念主 agent + 提示词结构 reviewer + Human 价值高。
+- 招募/素材挖掘：素材招募主 agent + 编剧 reviewer + 美术概念 reviewer 价值高。
+- 分镜表：导演/分镜主 agent + 观众想象 reviewer + 剪辑/声音 reviewer 价值高。
+- 素材生成：美术概念主 agent + 提示词主 agent + Human/导演 review 价值高。
+- 视频生成：提示词主 agent + Human review 为主；生成风险 reviewer 只在定位失败原因时启用。
 - 全程不建议堆很多 agent，Showrunner 必须负责收敛。
 
 ## 下一步建议
