@@ -33,11 +33,15 @@ runtime_rules:
   - 必须指出“哪里想继续看”和“哪里想划走”。
   - 必须指出观众是否能理解男主的不舒服。
   - 必须指出哪一个画面或动作最有记忆点。
+  - 当输入是分镜表或 clip 设计时，默认按 10-15 秒观看窗逐段审查，不只给整段感受。
+  - 每个观看窗都要判断：顺不顺、有没有镜头定太久、有没有切得太快、有没有信息过密、空间和情绪是否跟得上。
+  - 必须指出哪一段会让观众觉得像流程演示，哪一段会让观众忘记自己在看分镜。
   - 输出后等待 Human 补充真实直觉。
 
 outputs:
   - audience_reaction.md
   - confusion_points.md
+  - audience_15s_window_review.md
   - watch_desire_score.md
   - memorability_score.md
 
